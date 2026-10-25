@@ -14,8 +14,14 @@ export default function Sala3({ onNavigate = () => {} }) {
   const [selectedOptIdx, setSelectedOptIdx] = useState(null);
   const [answeredPoints, setAnsweredPoints] = useState([null, null, null]);
 
-  const points = SALA3_DATA.videoDecisionPoints;
-  const currentPoint = points[activePointIdx];
+  const points = SALA3_DATA?.videoDecisionPoints || [];
+  const currentPoint = points[activePointIdx] || {
+    id: 1,
+    timestamp: '00:15',
+    title: 'Punto de Decisión',
+    question: 'Selecciona la inferencia lógica válida.',
+    options: []
+  };
 
   const handleSelectDecision = (idx, opt) => {
     sound.playClick();
@@ -54,6 +60,10 @@ export default function Sala3({ onNavigate = () => {} }) {
   };
 
   const exhibitIcons = ['📹', '🧩', '❓', '🔢'];
+  const red15 = SALA3_DATA?.redItems?.[4] || {
+    title: 'RED #15 (Actividad): Decisiones Lógicas en Momentos Clave del Vídeo',
+    descripcion: 'Pausa el video en momentos cruciales para tomar decisiones lógicas basadas en evidencias.'
+  };
 
   return (
     <div className="relative min-h-screen pb-32 pt-6">
@@ -131,7 +141,7 @@ export default function Sala3({ onNavigate = () => {} }) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {SALA3_DATA.redItems.slice(0, 4).map((red, idx) => (
+            {(SALA3_DATA?.redItems?.slice(0, 4) || []).map((red, idx) => (
               <div
                 key={red.id}
                 onClick={() => {
@@ -166,13 +176,13 @@ export default function Sala3({ onNavigate = () => {} }) {
                   </div>
 
                   <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--accent-blue)', fontWeight: 700, display: 'block', marginBottom: '4px' }}>
-                    {red.herramienta}
+                    {red.formato?.split('(')[1]?.replace(')', '') || 'Herramienta TIC'}
                   </span>
                   <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.35, marginBottom: '6px' }}>
                     {red.title.replace(/^RED #\d+:\s*/, '')}
                   </h3>
                   <p style={{ fontSize: '0.8rem', color: '#94A3B8', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                    {red.description}
+                    {red.descripcion || red.description}
                   </p>
                 </div>
 
@@ -188,7 +198,7 @@ export default function Sala3({ onNavigate = () => {} }) {
                   }}
                 >
                   <span style={{ color: '#64748B', fontFamily: 'var(--font-mono)' }}>
-                    {red.formato.split('(')[0]}
+                    {red.formato?.split('(')[0] || 'Recurso Virtual'}
                   </span>
                   <span style={{ color: 'var(--accent-blue)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '3px' }}>
                     <Eye size={13} />
@@ -211,10 +221,10 @@ export default function Sala3({ onNavigate = () => {} }) {
                 <span style={{ fontSize: '11px', color: '#94A3B8' }}>H5P Interactive Video Engine</span>
               </div>
               <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF' }}>
-                {SALA3_DATA.red15.title}
+                {red15.title}
               </h2>
               <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px' }}>
-                {SALA3_DATA.red15.instruction}
+                {red15.descripcion}
               </p>
             </div>
 
@@ -284,7 +294,7 @@ export default function Sala3({ onNavigate = () => {} }) {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
               <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', padding: '2px 6px', borderRadius: '4px', background: 'rgba(255, 184, 0, 0.15)', color: '#FFB800', fontWeight: 700 }}>
-                PAUSA DE CONTROL EN {currentPoint.timestamp}
+                PAUSA DE CONTROL EN {currentPoint.timestamp}: {currentPoint.title}
               </span>
             </div>
 
@@ -293,7 +303,7 @@ export default function Sala3({ onNavigate = () => {} }) {
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              {currentPoint.options.map((opt, idx) => {
+              {(currentPoint.options || []).map((opt, idx) => {
                 const isPicked = selectedOptIdx === idx;
                 const showValidation = selectedOptIdx !== null;
 

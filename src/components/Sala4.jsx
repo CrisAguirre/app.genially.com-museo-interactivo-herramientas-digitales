@@ -40,7 +40,12 @@ export default function Sala4({
   const [voteSubmitted, setVoteSubmitted] = useState(false);
 
   const timerRef = useRef(null);
-  const currentQ = RETO_VISITANTE_QUESTIONS[currentIdx];
+  const currentQ = RETO_VISITANTE_QUESTIONS[currentIdx] || {
+    sala: 'Sala 4',
+    herramienta: 'TIC',
+    question: 'Pregunta de evaluación final.',
+    options: []
+  };
 
   useEffect(() => {
     if (!quizStarted || quizFinished || isAnswered) return;
@@ -143,6 +148,19 @@ export default function Sala4({
 
   const badge = BADGES_SYSTEM.find((b) => score >= b.minScore) || BADGES_SYSTEM[BADGES_SYSTEM.length - 1];
   const exhibitIcons = ['🌐', '✍️', '🤖', '📊'];
+  const red20 = SALA4_DATA?.redItems?.[4] || {
+    title: 'RED #20 (Actividad): Foro de Debate sobre Dilema Ético-Lógico',
+    descripcion: 'Espacio de discusión con muro de argumentos y votación en vivo.'
+  };
+  const dilemma = SALA4_DATA?.forumDilemma || {
+    title: 'Dilema Ético-Lógico del Vehículo Autónomo',
+    prompt: '¿Cómo debe programarse la regla lógica ante un accidente inevitable?',
+    positions: [
+      { id: 'utilitarista', label: 'Enfoque Utilitarista (Minimizar víctimas)', votes: 78, pct: '62%' },
+      { id: 'deontologico', label: 'Enfoque Deontológico (No actuar para desviar)', votes: 29, pct: '23%' },
+      { id: 'contractual', label: 'Enfoque Contractual (Proteger al pasajero)', votes: 19, pct: '15%' }
+    ]
+  };
 
   return (
     <div className="relative min-h-screen pb-32 pt-6">
@@ -220,7 +238,7 @@ export default function Sala4({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {SALA4_DATA.redItems.slice(0, 4).map((red, idx) => (
+            {(SALA4_DATA?.redItems?.slice(0, 4) || []).map((red, idx) => (
               <div
                 key={red.id}
                 onClick={() => {
@@ -255,13 +273,13 @@ export default function Sala4({
                   </div>
 
                   <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--accent-emerald)', fontWeight: 700, display: 'block', marginBottom: '4px' }}>
-                    {red.herramienta}
+                    {red.formato?.split('(')[1]?.replace(')', '') || 'Herramienta TIC'}
                   </span>
                   <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.35, marginBottom: '6px' }}>
                     {red.title.replace(/^RED #\d+:\s*/, '')}
                   </h3>
                   <p style={{ fontSize: '0.8rem', color: '#94A3B8', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                    {red.description}
+                    {red.descripcion || red.description}
                   </p>
                 </div>
 
@@ -277,7 +295,7 @@ export default function Sala4({
                   }}
                 >
                   <span style={{ color: '#64748B', fontFamily: 'var(--font-mono)' }}>
-                    {red.formato.split('(')[0]}
+                    {red.formato?.split('(')[0] || 'Recurso Virtual'}
                   </span>
                   <span style={{ color: 'var(--accent-emerald)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '3px' }}>
                     <Eye size={13} />
@@ -300,17 +318,17 @@ export default function Sala4({
                 <span style={{ fontSize: '11px', color: '#94A3B8' }}>Wix / WordPress Metacognitive Forum</span>
               </div>
               <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF' }}>
-                {SALA4_DATA.red20.title}
+                {red20.title}
               </h2>
               <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px' }}>
-                {SALA4_DATA.red20.dilemma}
+                {dilemma.prompt}
               </p>
             </div>
           </div>
 
           {/* Voting Options */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-            {SALA4_DATA.red20.options.map((opt) => {
+            {(dilemma.positions || []).map((opt) => {
               const isSelected = selectedForumVote === opt.id;
               return (
                 <div
@@ -330,18 +348,18 @@ export default function Sala4({
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                     <span style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', fontWeight: 800, color: isSelected ? 'var(--accent-emerald)' : '#94A3B8' }}>
-                      POSTURA {opt.id.toUpperCase()}
+                      POSTURA: {opt.id?.toUpperCase()}
                     </span>
-                    <span style={{ fontSize: '13px', color: isSelected ? 'var(--accent-emerald)' : '#64748B' }}>
-                      {isSelected ? '✓ Tu Elección' : '○ Elegir'}
+                    <span style={{ fontSize: '12px', color: isSelected ? 'var(--accent-emerald)' : '#64748B', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+                      {opt.pct || ''} {isSelected ? '✓ Elegido' : ''}
                     </span>
                   </div>
-                  <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '0.4rem' }}>
-                    {opt.title}
+                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '0.4rem' }}>
+                    {opt.label}
                   </h4>
-                  <p style={{ fontSize: '0.85rem', color: '#CBD5E1', lineHeight: 1.45 }}>
-                    {opt.argument}
-                  </p>
+                  <div style={{ fontSize: '11px', color: '#94A3B8' }}>
+                    {opt.votes} votos registrados en la comunidad educativa
+                  </div>
                 </div>
               );
             })}
@@ -538,7 +556,7 @@ export default function Sala4({
 
               {/* 4 Interactive Options */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                {currentQ.options.map((opt) => {
+                {(currentQ.options || []).map((opt) => {
                   const isThisSelected = selectedOption?.id === opt.id;
                   let borderCol = 'rgba(255, 255, 255, 0.12)';
                   let bgCol = 'rgba(255, 255, 255, 0.04)';

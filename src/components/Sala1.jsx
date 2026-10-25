@@ -10,7 +10,7 @@ export default function Sala1({ onNavigate = () => {} }) {
   const [selectedExhibit, setSelectedExhibit] = useState(null);
 
   // RED #5 Activity State: Clasificar pasos de un algoritmo
-  const [steps, setSteps] = useState(SALA1_DATA.algoritmoStepsDefault);
+  const [steps, setSteps] = useState(SALA1_DATA?.algoritmoStepsDefault || []);
   const [isVerified, setIsVerified] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
@@ -47,12 +47,16 @@ export default function Sala1({ onNavigate = () => {} }) {
 
   const handleReset = () => {
     sound.playClick();
-    setSteps(SALA1_DATA.algoritmoStepsDefault);
+    setSteps(SALA1_DATA?.algoritmoStepsDefault || []);
     setIsVerified(false);
     setIsCorrect(false);
   };
 
   const exhibitIcons = ['🧠', '🔀', '🌿', '💬'];
+  const red5 = SALA1_DATA?.redItems?.[4] || {
+    title: 'RED #5 (Actividad): Clasificador de Pasos de un Algoritmo Desordenado',
+    descripcion: 'Ordena cronológicamente los 5 pasos lógicos para modelar el algoritmo.'
+  };
 
   return (
     <div className="relative min-h-screen pb-32 pt-6">
@@ -130,7 +134,7 @@ export default function Sala1({ onNavigate = () => {} }) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {SALA1_DATA.redItems.slice(0, 4).map((red, idx) => (
+            {(SALA1_DATA?.redItems?.slice(0, 4) || []).map((red, idx) => (
               <div
                 key={red.id}
                 onClick={() => {
@@ -145,7 +149,6 @@ export default function Sala1({ onNavigate = () => {} }) {
                 }}
               >
                 <div>
-                  {/* Pedestal 2D Mini Graphic */}
                   <div className="pedestal-artwork-2d">
                     <span style={{ fontSize: '2.5rem' }}>{exhibitIcons[idx]}</span>
                     <span
@@ -166,13 +169,13 @@ export default function Sala1({ onNavigate = () => {} }) {
                   </div>
 
                   <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--accent-cyan)', fontWeight: 700, display: 'block', marginBottom: '4px' }}>
-                    {red.herramienta}
+                    {red.formato?.split('(')[1]?.replace(')', '') || 'Herramienta TIC'}
                   </span>
                   <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.35, marginBottom: '6px' }}>
                     {red.title.replace(/^RED #\d+:\s*/, '')}
                   </h3>
                   <p style={{ fontSize: '0.8rem', color: '#94A3B8', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                    {red.description}
+                    {red.descripcion || red.description}
                   </p>
                 </div>
 
@@ -188,7 +191,7 @@ export default function Sala1({ onNavigate = () => {} }) {
                   }}
                 >
                   <span style={{ color: '#64748B', fontFamily: 'var(--font-mono)' }}>
-                    {red.formato.split('(')[0]}
+                    {red.formato?.split('(')[0] || 'Recurso Virtual'}
                   </span>
                   <span style={{ color: 'var(--accent-cyan)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '3px' }}>
                     <Eye size={13} />
@@ -211,10 +214,10 @@ export default function Sala1({ onNavigate = () => {} }) {
                 <span style={{ fontSize: '11px', color: '#94A3B8' }}>MindMeister & Canva</span>
               </div>
               <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF' }}>
-                {SALA1_DATA.red5.title}
+                {red5.title}
               </h2>
               <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px' }}>
-                {SALA1_DATA.red5.instruction}
+                {red5.descripcion}
               </p>
             </div>
 

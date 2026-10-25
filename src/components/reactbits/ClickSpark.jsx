@@ -2,10 +2,10 @@ import React, { useRef, useEffect } from 'react';
 
 export default function ClickSpark({
   sparkColor = '#FFD700',
-  sparkSize = 10,
+  sparkSize = 8,
   sparkRadius = 25,
   sparkCount = 8,
-  duration = 500,
+  duration = 400,
   children
 }) {
   const canvasRef = useRef(null);
@@ -65,7 +65,7 @@ export default function ClickSpark({
   }, [duration, sparkRadius, sparkSize]);
 
   const handleClick = (e) => {
-    const colors = ['#E21B3C', '#1368CE', '#D89E00', '#26890C', '#FFD700'];
+    const colors = ['#00E5FF', '#FF2A6D', '#05D9E8', '#00F5A0', '#FFB800'];
     const chosenColor = colors[Math.floor(Math.random() * colors.length)];
     const angles = Array.from(
       { length: sparkCount },
@@ -82,10 +82,17 @@ export default function ClickSpark({
   };
 
   return (
-    <div onClick={handleClick} className="relative w-full h-full">
+    <div onClick={handleClick} style={{ position: 'relative', width: '100%', minHeight: '100vh' }}>
       <canvas
         ref={canvasRef}
-        className="pointer-events-none fixed inset-0 z-50"
+        style={{
+          pointerEvents: 'none',
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          width: '100vw',
+          height: '100vh'
+        }}
       />
       {children}
     </div>

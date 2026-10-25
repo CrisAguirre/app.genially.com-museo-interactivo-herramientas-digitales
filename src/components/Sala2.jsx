@@ -17,8 +17,13 @@ export default function Sala2({ onNavigate = () => {} }) {
   const [escapeCompleted, setEscapeCompleted] = useState(false);
   const [showClue, setShowClue] = useState(false);
 
-  const riddles = SALA2_DATA.escapeRoomRiddles;
-  const activeRiddle = riddles[currentRiddleIdx];
+  const riddles = SALA2_DATA?.escapeRoomRiddles || [];
+  const activeRiddle = riddles[currentRiddleIdx] || {
+    name: 'Candado Activo',
+    prompt: 'Resuelve el acertijo lógico para desbloquear.',
+    answer: 'C',
+    clue: 'Analiza las condiciones'
+  };
 
   const handleUnlock = (e) => {
     e.preventDefault();
@@ -32,7 +37,7 @@ export default function Sala2({ onNavigate = () => {} }) {
       const updated = [...unlockedDoors];
       updated[currentRiddleIdx] = true;
       setUnlockedDoors(updated);
-      setFeedback({ type: 'success', msg: `¡Candado 0${currentRiddleIdx + 1} desbloqueado!` });
+      setFeedback({ type: 'success', msg: `¡Candado 0${currentRiddleIdx + 1} desbloqueado con éxito!` });
       setUserAnswer('');
       setShowClue(false);
 
@@ -54,7 +59,7 @@ export default function Sala2({ onNavigate = () => {} }) {
       }
     } else {
       sound.playIncorrect();
-      setFeedback({ type: 'error', msg: 'Combinación incorrecta. Revisa el enunciado o consulta la pista.' });
+      setFeedback({ type: 'error', msg: 'Combinación incorrecta. Revisa el enunciado o consulta la pista heurística.' });
     }
   };
 
@@ -69,6 +74,10 @@ export default function Sala2({ onNavigate = () => {} }) {
   };
 
   const exhibitIcons = ['🐢', '🌳', '🔍', '💡'];
+  const red10 = SALA2_DATA?.redItems?.[4] || {
+    title: 'RED #10 (Actividad): Escape Room de 3 Candados Lógicos',
+    descripcion: 'Supera los 3 enigmas basados en deducción y el método de George Pólya.'
+  };
 
   return (
     <div className="relative min-h-screen pb-32 pt-6">
@@ -146,7 +155,7 @@ export default function Sala2({ onNavigate = () => {} }) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {SALA2_DATA.redItems.slice(0, 4).map((red, idx) => (
+            {(SALA2_DATA?.redItems?.slice(0, 4) || []).map((red, idx) => (
               <div
                 key={red.id}
                 onClick={() => {
@@ -181,13 +190,13 @@ export default function Sala2({ onNavigate = () => {} }) {
                   </div>
 
                   <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--accent-crimson)', fontWeight: 700, display: 'block', marginBottom: '4px' }}>
-                    {red.herramienta}
+                    {red.formato?.split('(')[1]?.replace(')', '') || 'Herramienta TIC'}
                   </span>
                   <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.35, marginBottom: '6px' }}>
                     {red.title.replace(/^RED #\d+:\s*/, '')}
                   </h3>
                   <p style={{ fontSize: '0.8rem', color: '#94A3B8', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                    {red.description}
+                    {red.descripcion || red.description}
                   </p>
                 </div>
 
@@ -203,7 +212,7 @@ export default function Sala2({ onNavigate = () => {} }) {
                   }}
                 >
                   <span style={{ color: '#64748B', fontFamily: 'var(--font-mono)' }}>
-                    {red.formato.split('(')[0]}
+                    {red.formato?.split('(')[0] || 'Recurso Virtual'}
                   </span>
                   <span style={{ color: 'var(--accent-crimson)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '3px' }}>
                     <Eye size={13} />
@@ -226,10 +235,10 @@ export default function Sala2({ onNavigate = () => {} }) {
                 <span style={{ fontSize: '11px', color: '#94A3B8' }}>Genially Gamification Engine</span>
               </div>
               <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF' }}>
-                {SALA2_DATA.red10.title}
+                {red10.title}
               </h2>
               <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px' }}>
-                {SALA2_DATA.red10.instruction}
+                {red10.descripcion}
               </p>
             </div>
 
@@ -272,7 +281,7 @@ export default function Sala2({ onNavigate = () => {} }) {
                     {isUnlocked ? '🔓' : '🔒'}
                   </div>
                   <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 800, color: isUnlocked ? '#00F5A0' : isCurrent ? 'var(--accent-crimson)' : '#94A3B8' }}>
-                    CANDADO 0{i + 1}
+                    {r.name || `CANDADO 0${i + 1}`}
                   </span>
                   <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px' }}>
                     {isUnlocked ? 'DESBLOQUEADO' : isCurrent ? 'ACTIVO' : 'BLOQUEADO'}
@@ -295,7 +304,7 @@ export default function Sala2({ onNavigate = () => {} }) {
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                 <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--accent-crimson)', fontWeight: 700 }}>
-                  DESAFÍO {currentRiddleIdx + 1} DE {riddles.length}
+                  DESAFÍO {currentRiddleIdx + 1} DE {riddles.length}: {activeRiddle.name}
                 </span>
                 <button
                   type="button"
@@ -317,7 +326,7 @@ export default function Sala2({ onNavigate = () => {} }) {
               </div>
 
               <p style={{ fontSize: '1rem', color: '#FFFFFF', fontWeight: 600, lineHeight: 1.5, marginBottom: '0.75rem' }}>
-                {activeRiddle.question}
+                {activeRiddle.prompt || activeRiddle.question}
               </p>
 
               {showClue && (
@@ -331,7 +340,7 @@ export default function Sala2({ onNavigate = () => {} }) {
                   type="text"
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
-                  placeholder="Escribe la clave o respuesta..."
+                  placeholder="Escribe la clave o respuesta (Ej: C, 4)..."
                   style={{
                     flex: 1,
                     padding: '0.75rem 1rem',
