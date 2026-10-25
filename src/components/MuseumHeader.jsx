@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Volume2, VolumeX, Award } from 'lucide-react';
 import { sound } from '../utils/audio';
+import { INSTITUCION } from '../data/museumData';
 
 export default function MuseumHeader({
   currentRoomId = 'lobby',
@@ -28,13 +29,14 @@ export default function MuseumHeader({
         top: 0,
         zIndex: 100,
         width: '100%',
-        backgroundColor: 'rgba(5, 7, 11, 0.88)',
+        backgroundColor: 'rgba(5, 7, 11, 0.92)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-        padding: '0.75rem 1rem'
+        padding: '0.5rem 1rem'
       }}
     >
+      {/* Top row: Logo + Location + Actions */}
       <div className="container flex items-center justify-between">
         {/* Museum Logo & Identity */}
         <div
@@ -70,7 +72,7 @@ export default function MuseumHeader({
                   color: '#FFFFFF'
                 }}
               >
-                MUSEO VIRTUAL
+                MUSEO INTERACTIVO
               </span>
               <span
                 style={{
@@ -88,7 +90,7 @@ export default function MuseumHeader({
               </span>
             </div>
             <div style={{ fontSize: '11px', color: '#94A3B8' }}>
-              Pensamiento Lógico & Resolución de Problemas
+              Herramientas Digitales y Didáctica
             </div>
           </div>
         </div>

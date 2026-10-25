@@ -1,17 +1,33 @@
 // Museo Interactivo de Tecnología Educativa
 // Tema Central: Pensamiento Lógico y Resolución de Problemas
-// Población: Grados 6.° a 11.°
+// Población: Grado 5.° — Institución Las Planadas, Tolima
+// Estudiante: Juana Yasiris Valoyes Serna
+// Módulo: Herramientas Digitales y Didáctica
+// Docente: Profesora Ilsy del Pilar Rodríguez Bernal
 // Plataforma Virtual Unificada: Genially / Experiencia Web Inmersiva
 // Basado en la Ficha Técnica y Programa Oficial de Salas
 
+export const INSTITUCION = {
+  nombre: 'Institución Las Planadas',
+  ubicacion: 'Tolima, Colombia',
+  grado: 'Grado 5.°',
+  estudiante: 'Juana Yasiris Valoyes Serna',
+  modulo: 'Herramientas Digitales y Didáctica',
+  docente: 'Profesora Ilsy del Pilar Rodríguez Bernal'
+};
+
 export const FICHA_TECNICA = {
   temaCentral: 'Pensamiento Lógico y Resolución de Problemas',
-  poblacion: 'Estudiantes de Grados 6.° a 11.° (Educación Básica Secundaria y Media)',
+  poblacion: 'Estudiantes de Grado 5.° — Institución Las Planadas, Tolima',
   plataforma: 'Genially como lienzo virtual unificado y entorno web interactivo',
   estructura: '4 salas temáticas con navegación no lineal + Reto del Visitante',
-  modalidad: 'Trabajo colaborativo (hasta 4 integrantes) y recorrido individual',
+  modalidad: 'Trabajo colaborativo e individual guiado',
   objetivoPedagogico: 'Potenciar el razonamiento deductivo, la identificación de patrones y la resolución de algoritmos mediante Recursos Educativos Digitales (RED).',
-  enfoque: 'Cada sala articula 1 herramienta TIC + 5 RED propios + 1 actividad interactiva para que el visitante pase de espectador a sujeto activo.'
+  enfoque: 'Cada sala articula 1 herramienta TIC + 5 RED propios + 1 actividad interactiva para que el visitante pase de espectador a sujeto activo.',
+  estudiante: 'Juana Yasiris Valoyes Serna',
+  docente: 'Profesora Ilsy del Pilar Rodríguez Bernal',
+  modulo: 'Herramientas Digitales y Didáctica',
+  institucion: 'Institución Las Planadas, Tolima'
 };
 
 export const MUSEUM_ROOMS = [
@@ -23,7 +39,7 @@ export const MUSEUM_ROOMS = [
     badge: 'Pórtico Central',
     color: '#46178F', // Genially / Luxury Purple
     icon: 'Landmark',
-    description: 'Explora la exposición virtual sobre Pensamiento Lógico y Resolución de Problemas para grados 6.° a 11.°, fundamentada en 4 salas TIC y más de 20 REDs interactivos.'
+    description: 'Explora la exposición virtual sobre Pensamiento Lógico y Resolución de Problemas para Grado 5.° de la Institución Las Planadas, Tolima, fundamentada en 4 salas TIC y más de 20 REDs interactivos.'
   },
   {
     id: 'sala1',
