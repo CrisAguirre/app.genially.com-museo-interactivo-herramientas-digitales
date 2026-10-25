@@ -3,8 +3,8 @@ import { ArrowLeft, ArrowRight, Lock, Unlock, Key, HelpCircle, CheckCircle2, Ale
 import confetti from 'canvas-confetti';
 import { sound } from '../utils/audio';
 import { SALA2_DATA } from '../data/museumData';
-import BackgroundParticles from './reactbits/BackgroundParticles';
 import ExhibitModal from './ExhibitModal';
+import { DioramaSala2 } from './ambient/PavilionDioramas2D';
 
 export default function Sala2({ onNavigate = () => {} }) {
   const [selectedExhibit, setSelectedExhibit] = useState(null);
@@ -68,54 +68,80 @@ export default function Sala2({ onNavigate = () => {} }) {
     setShowClue(false);
   };
 
-  const exhibitIcons = ['🌀', '🌳', '👁️', '📐'];
+  const exhibitIcons = ['🐢', '🌳', '🔍', '💡'];
 
   return (
-    <div className="relative min-h-[calc(100vh-70px)] pb-28 pt-8">
-      {/* Background Particles with Crimson Tint */}
-      <BackgroundParticles particleCount={60} particleColor="rgba(255, 51, 102, 0.4)" lineColor="rgba(255, 51, 102, 0.1)" />
-
+    <div className="relative min-h-screen pb-32 pt-6">
       <div className="container relative z-10">
-        {/* Top Room Navigation Bar */}
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/[0.08]">
+        {/* Top Navigation Row */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
           <button
             onClick={() => {
               sound.playClick();
               onNavigate('sala1');
             }}
-            className="btn-secondary text-xs"
+            className="btn-secondary"
+            style={{ fontSize: '12px', padding: '0.5rem 1rem' }}
           >
-            <ArrowLeft size={14} /> Pabellón 01: Organizadores Gráficos
+            <ArrowLeft size={14} />
+            <span>Volver a Sala 01</span>
           </button>
 
-          <div className="text-right">
-            <span className="text-[11px] font-mono text-rose-400 font-bold uppercase tracking-wider block">
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--accent-crimson)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block' }}>
               Pabellón 02 • Genially / Prezi / SlideShare
             </span>
-            <span className="text-xs text-slate-400">
-              Presentaciones & Gamificación
+            <span style={{ fontSize: '12px', color: '#94A3B8' }}>
+              Presentaciones Dinámicas, Gamificación & Paradojas
             </span>
           </div>
         </div>
 
-        {/* Room Header & Concept */}
-        <div className="max-w-2xl mb-10 text-left">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
-            PRESENTACIONES Y GAMIFICACIÓN
-          </h1>
-          <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-            Inmersión lúdica y narrativa para conceptos lógicos complejos: paradojas de la verdad, árboles de decisión, el método Pólya y resolución cooperativa de acertijos.
-          </p>
+        {/* 2D ANIMATED PAVILION BANNER */}
+        <div className="pavilion-banner-2d" style={{ borderLeft: '4px solid var(--accent-crimson)' }}>
+          <div>
+            <div className="meta-pill mb-3">
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-crimson)' }} />
+              <span>SALA TEMÁTICA 02 • GAMIFICACIÓN & PARADOJAS</span>
+            </div>
+            <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.15 }}>
+              PRESENTACIONES & GAMIFICACIÓN
+            </h1>
+            <p style={{ fontSize: '0.9rem', color: '#CBD5E1', marginTop: '0.75rem', lineHeight: 1.6, maxWidth: '580px' }}>
+              Descubre cómo la narrativa lúdica, las paradojas clásicas de Zenón y Monty Hall, y el método heurístico de George Pólya potencian el razonamiento crítico no lineal.
+            </p>
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'rgba(255, 42, 109, 0.1)', color: 'var(--accent-crimson)', border: '1px solid rgba(255, 42, 109, 0.25)', fontFamily: 'var(--font-mono)' }}>
+                Genially Gamified
+              </span>
+              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'rgba(255, 42, 109, 0.1)', color: 'var(--accent-crimson)', border: '1px solid rgba(255, 42, 109, 0.25)', fontFamily: 'var(--font-mono)' }}>
+                Prezi Non-Linear
+              </span>
+              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'rgba(255, 42, 109, 0.1)', color: 'var(--accent-crimson)', border: '1px solid rgba(255, 42, 109, 0.25)', fontFamily: 'var(--font-mono)' }}>
+                SlideShare Case Studies
+              </span>
+            </div>
+          </div>
+
+          {/* 2D Vector Animated Cyber Vault Diorama */}
+          <div>
+            <DioramaSala2 />
+          </div>
         </div>
 
-        {/* 4 Exhibit Pedestals (RED 6 to 9) */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-slate-200 uppercase tracking-wider font-mono text-xs">
-              Colección de Recursos Educativos Digitales (RED 6 al 9)
-            </h2>
-            <span className="text-xs text-slate-500 font-mono">
-              Haz clic en cualquier exhibición para examinar detalles
+        {/* 4 EXHIBIT SHOWCASES (RED 6 to 9) */}
+        <div style={{ marginBottom: '3rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <div>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF' }}>
+                Galería de Recursos Educativos Digitales
+              </h2>
+              <p style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                4 obras gamificadas catalogadas (RED 06 al RED 09)
+              </p>
+            </div>
+            <span style={{ fontSize: '11px', color: '#94A3B8', fontFamily: 'var(--font-mono)' }}>
+              Haz clic en un pedestal para ver ficha completa
             </span>
           </div>
 
@@ -127,23 +153,61 @@ export default function Sala2({ onNavigate = () => {} }) {
                   sound.playClick();
                   setSelectedExhibit(red);
                 }}
-                className="exhibit-card group"
-                style={{ '--card-accent': 'var(--accent-crimson)' }}
+                className="exhibit-pedestal"
+                style={{
+                  '--pedestal-accent': 'var(--accent-crimson)',
+                  '--pedestal-glow': 'rgba(255, 42, 109, 0.2)',
+                  cursor: 'pointer'
+                }}
               >
                 <div>
-                  <div className="text-2xl mb-3">{exhibitIcons[idx]}</div>
-                  <span className="text-[11px] font-mono text-rose-400 block mb-1">
-                    RED 0{idx + 6}
+                  <div className="pedestal-artwork-2d">
+                    <span style={{ fontSize: '2.5rem' }}>{exhibitIcons[idx]}</span>
+                    <span
+                      style={{
+                        position: 'absolute',
+                        bottom: '6px',
+                        right: '8px',
+                        fontSize: '9px',
+                        fontFamily: 'var(--font-mono)',
+                        padding: '2px 5px',
+                        borderRadius: '4px',
+                        background: 'rgba(0,0,0,0.6)',
+                        color: 'var(--accent-crimson)'
+                      }}
+                    >
+                      RED 0{idx + 6}
+                    </span>
+                  </div>
+
+                  <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--accent-crimson)', fontWeight: 700, display: 'block', marginBottom: '4px' }}>
+                    {red.herramienta}
                   </span>
-                  <h3 className="text-sm font-bold text-white font-display group-hover:text-rose-300 transition-colors leading-snug">
+                  <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.35, marginBottom: '6px' }}>
                     {red.title.replace(/^RED #\d+:\s*/, '')}
                   </h3>
+                  <p style={{ fontSize: '0.8rem', color: '#94A3B8', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {red.description}
+                  </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
-                  <span className="text-[11px] truncate max-w-[130px]">{red.formato.split('(')[0]}</span>
-                  <span className="text-rose-400 font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                    <Eye size={13} /> Ver
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginTop: '1rem',
+                    paddingTop: '0.75rem',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                    fontSize: '11px'
+                  }}
+                >
+                  <span style={{ color: '#64748B', fontFamily: 'var(--font-mono)' }}>
+                    {red.formato.split('(')[0]}
+                  </span>
+                  <span style={{ color: 'var(--accent-crimson)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '3px' }}>
+                    <Eye size={13} />
+                    <span>Inspeccionar</span>
                   </span>
                 </div>
               </div>
@@ -151,96 +215,159 @@ export default function Sala2({ onNavigate = () => {} }) {
           </div>
         </div>
 
-        {/* Central Hands-On Station: RED #10 Activity */}
-        <div className="gallery-stage mt-10">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/[0.08] mb-6 gap-3">
+        {/* INTERACTIVE ESCAPE ROOM STATION: RED #10 */}
+        <div className="activity-stage-box" style={{ borderTop: '3px solid var(--accent-crimson)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
             <div>
-              <div className="meta-pill text-rose-300 border-rose-500/30 text-[11px] mb-1.5">
-                RED #10 • ACTIVIDAD INTERACTIVA DEL VISITANTE
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '4px' }}>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255, 42, 109, 0.15)', color: 'var(--accent-crimson)', fontWeight: 700 }}>
+                  RED #10 • ACTIVIDAD GAMIFICADA
+                </span>
+                <span style={{ fontSize: '11px', color: '#94A3B8' }}>Genially Gamification Engine</span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white font-display">
-                Terminal de Escape Room: Desbloqueo de Candados Lógicos
+              <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF' }}>
+                {SALA2_DATA.red10.title}
               </h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Aplica la deducción rigurosa para descifrar las claves de los 3 candados de seguridad.
+              <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px' }}>
+                {SALA2_DATA.red10.instruction}
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
-              {unlockedDoors.map((unlocked, idx) => (
-                <div
-                  key={idx}
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-xs border transition-all ${
-                    unlocked
-                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                      : idx === currentRiddleIdx
-                      ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 animate-pulse'
-                      : 'bg-white/[0.04] text-slate-500 border-white/10'
-                  }`}
-                >
-                  {unlocked ? <Unlock size={14} /> : <Lock size={14} />}
-                </div>
-              ))}
-            </div>
+            <button
+              onClick={handleResetEscape}
+              className="btn-secondary"
+              style={{ fontSize: '12px', padding: '0.45rem 0.9rem' }}
+            >
+              <RefreshCw size={13} />
+              <span>Reiniciar Bóveda</span>
+            </button>
           </div>
 
-          {!escapeCompleted ? (
-            <div className="space-y-5">
-              <div className="p-5 rounded-2xl bg-surface border border-subtle">
-                <div className="flex items-center justify-between text-xs font-mono text-rose-400 mb-2">
-                  <span className="font-bold">{activeRiddle.name}</span>
-                  <span className="text-slate-500">Enigma {currentRiddleIdx + 1} de 3</span>
-                </div>
+          {/* 3 Digital Padlocks Status */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '1.5rem' }}>
+            {riddles.map((r, i) => {
+              const isUnlocked = unlockedDoors[i];
+              const isCurrent = currentRiddleIdx === i && !escapeCompleted;
 
-                <p className="text-sm sm:text-base font-semibold text-white leading-relaxed">
-                  {activeRiddle.prompt}
-                </p>
-
-                {showClue && (
-                  <div className="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-300 text-xs flex items-center gap-2">
-                    <HelpCircle size={15} className="shrink-0" />
-                    <span>{activeRiddle.clue}</span>
+              return (
+                <div
+                  key={r.id}
+                  style={{
+                    padding: '0.85rem',
+                    borderRadius: '12px',
+                    textAlign: 'center',
+                    backgroundColor: isUnlocked
+                      ? 'rgba(0, 245, 160, 0.1)'
+                      : isCurrent
+                      ? 'rgba(255, 42, 109, 0.15)'
+                      : 'rgba(255, 255, 255, 0.04)',
+                    border: isUnlocked
+                      ? '1px solid rgba(0, 245, 160, 0.4)'
+                      : isCurrent
+                      ? '1px solid var(--accent-crimson)'
+                      : '1px solid rgba(255, 255, 255, 0.08)'
+                  }}
+                >
+                  <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>
+                    {isUnlocked ? '🔓' : '🔒'}
                   </div>
-                )}
+                  <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 800, color: isUnlocked ? '#00F5A0' : isCurrent ? 'var(--accent-crimson)' : '#94A3B8' }}>
+                    CANDADO 0{i + 1}
+                  </span>
+                  <div style={{ fontSize: '10px', color: '#64748B', marginTop: '2px' }}>
+                    {isUnlocked ? 'DESBLOQUEADO' : isCurrent ? 'ACTIVO' : 'BLOQUEADO'}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Active Riddle Terminal */}
+          {!escapeCompleted ? (
+            <div
+              style={{
+                padding: '1.25rem',
+                borderRadius: '16px',
+                backgroundColor: 'rgba(10, 14, 22, 0.8)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                marginBottom: '1rem'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--accent-crimson)', fontWeight: 700 }}>
+                  DESAFÍO {currentRiddleIdx + 1} DE {riddles.length}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowClue(!showClue)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    fontSize: '11px',
+                    color: '#94A3B8',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <HelpCircle size={14} />
+                  <span>{showClue ? 'Ocultar pista' : 'Ver pista'}</span>
+                </button>
               </div>
 
-              <form onSubmit={handleUnlock} className="flex flex-wrap items-center gap-2.5">
+              <p style={{ fontSize: '1rem', color: '#FFFFFF', fontWeight: 600, lineHeight: 1.5, marginBottom: '0.75rem' }}>
+                {activeRiddle.question}
+              </p>
+
+              {showClue && (
+                <div style={{ padding: '0.6rem 0.9rem', borderRadius: '8px', backgroundColor: 'rgba(255, 184, 0, 0.1)', border: '1px solid rgba(255, 184, 0, 0.25)', color: '#FFB800', fontSize: '12px', marginBottom: '1rem' }}>
+                  💡 <strong>Pista heurística:</strong> {activeRiddle.clue}
+                </div>
+              )}
+
+              <form onSubmit={handleUnlock} style={{ display: 'flex', gap: '0.6rem' }}>
                 <input
                   type="text"
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
-                  placeholder="Introduce la combinación o código..."
-                  className="flex-1 min-w-[200px] px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder-slate-500 text-xs font-mono focus:border-rose-400 focus:outline-none"
+                  placeholder="Escribe la clave o respuesta..."
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem 1rem',
+                    borderRadius: '10px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    color: '#FFFFFF',
+                    fontSize: '0.9rem',
+                    fontFamily: 'var(--font-mono)',
+                    outline: 'none'
+                  }}
                 />
-
                 <button
                   type="submit"
-                  className="btn-primary text-xs"
-                  style={{ background: 'var(--accent-crimson)', color: '#FFF' }}
-                >
-                  <Key size={14} />
-                  <span>Desbloquear</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    sound.playClick();
-                    setShowClue(!showClue);
+                  className="btn-primary"
+                  style={{
+                    background: 'linear-gradient(135deg, #FF2A6D 0%, #FF6584 100%)',
+                    boxShadow: '0 4px 15px rgba(255, 42, 109, 0.4)'
                   }}
-                  className="btn-secondary text-xs"
                 >
-                  {showClue ? 'Ocultar Pista' : '💡 Pista'}
+                  <Key size={15} />
+                  <span>Desbloquear</span>
                 </button>
               </form>
 
               {feedback && (
                 <div
-                  className={`text-xs font-semibold px-3.5 py-2 rounded-xl flex items-center gap-2 ${
-                    feedback.type === 'success'
-                      ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
-                      : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
-                  }`}
+                  style={{
+                    marginTop: '0.75rem',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    color: feedback.type === 'success' ? '#00F5A0' : '#FF2A6D',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
                 >
                   {feedback.type === 'success' ? <CheckCircle2 size={15} /> : <AlertCircle size={15} />}
                   <span>{feedback.msg}</span>
@@ -248,28 +375,38 @@ export default function Sala2({ onNavigate = () => {} }) {
               )}
             </div>
           ) : (
-            <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-2">
-              <div className="text-3xl">🔓 ✨</div>
-              <h3 className="text-lg font-bold text-emerald-300 font-display">
-                ¡Escape Room Superado!
+            <div
+              style={{
+                padding: '2rem',
+                borderRadius: '16px',
+                textAlign: 'center',
+                backgroundColor: 'rgba(0, 245, 160, 0.1)',
+                border: '1px solid rgba(0, 245, 160, 0.4)'
+              }}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎉</div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#00F5A0' }}>
+                ¡Bóveda Digital Superada!
               </h3>
-              <p className="text-xs text-slate-300 max-w-md mx-auto">
-                Los 3 candados lógicos han sido resueltos mediante deducción matemática, verificación condicional y el método Pólya.
+              <p style={{ fontSize: '0.9rem', color: '#CBD5E1', marginTop: '0.5rem', maxWidth: '500px', margin: '0.5rem auto 1.5rem' }}>
+                Has aplicado con éxito el método de Pólya y resuelto los acertijos lógicos con solvencia.
               </p>
-              <div className="pt-2">
-                <button
-                  onClick={handleResetEscape}
-                  className="btn-secondary text-xs"
-                >
-                  <RefreshCw size={12} /> Reiniciar Desafío
-                </button>
-              </div>
+              <button
+                onClick={() => {
+                  sound.playClick();
+                  onNavigate('sala3');
+                }}
+                className="btn-primary"
+              >
+                <span>Avanzar al Pabellón 03: Video Educativo</span>
+                <ArrowRight size={16} />
+              </button>
             </div>
           )}
         </div>
 
-        {/* Room Navigation Footer */}
-        <div className="mt-12 pt-6 border-t border-white/[0.08] flex items-center justify-between text-xs">
+        {/* Bottom Room Navigation */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2.5rem' }}>
           <button
             onClick={() => {
               sound.playClick();
@@ -277,28 +414,34 @@ export default function Sala2({ onNavigate = () => {} }) {
             }}
             className="btn-secondary"
           >
-            <ArrowLeft size={14} /> Pabellón 01: Organizadores Gráficos
+            <ArrowLeft size={16} />
+            <span>Sala 01</span>
           </button>
 
           <button
             onClick={() => {
-              sound.playFanfare();
+              sound.playClick();
               onNavigate('sala3');
             }}
             className="btn-primary"
-            style={{ background: 'var(--accent-blue)', color: '#FFF' }}
+            style={{
+              background: 'linear-gradient(135deg, #05D9E8 0%, #0088FF 100%)',
+              boxShadow: '0 4px 20px rgba(5, 217, 232, 0.35)'
+            }}
           >
-            <span>Pabellón 03: Video Educativo Interactivo</span>
-            <ArrowRight size={14} />
+            <span>Avanzar a Sala 3: Video Interactivo</span>
+            <ArrowRight size={16} />
           </button>
         </div>
       </div>
 
-      {/* Exhibit Inspection Modal */}
-      <ExhibitModal
-        exhibit={selectedExhibit}
-        onClose={() => setSelectedExhibit(null)}
-      />
+      {/* Exhibit Detail Modal */}
+      {selectedExhibit && (
+        <ExhibitModal
+          exhibit={selectedExhibit}
+          onClose={() => setSelectedExhibit(null)}
+        />
+      )}
     </div>
   );
 }

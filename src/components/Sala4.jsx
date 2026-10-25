@@ -3,9 +3,8 @@ import confetti from 'canvas-confetti';
 import { ArrowLeft, ArrowRight, Trophy, Clock, CheckCircle2, XCircle, RotateCcw, Award, Star, Send, Eye } from 'lucide-react';
 import { sound } from '../utils/audio';
 import { SALA4_DATA, RETO_VISITANTE_QUESTIONS, BADGES_SYSTEM, SHAPES_ICONS } from '../data/museumData';
-import BackgroundLightning from './reactbits/BackgroundLightning';
 import ExhibitModal from './ExhibitModal';
-import PeekRating from './reactbits/PeekRating';
+import { DioramaSala4 } from './ambient/PavilionDioramas2D';
 
 export default function Sala4({
   onNavigate = () => {},
@@ -18,8 +17,8 @@ export default function Sala4({
   const [selectedForumVote, setSelectedForumVote] = useState(null);
   const [forumComment, setForumComment] = useState('');
   const [userArguments, setUserArguments] = useState([
-    { author: 'Mateo R.', text: 'El enfoque utilitarista busca minimizar el daño global objetivo.', time: 'Hace 10 min' },
-    { author: 'Camila P.', text: 'Las reglas deontológicas previenen que una máquina decida dañar activamente.', time: 'Hace 25 min' }
+    { author: 'Mateo R. (Estudiante Grado 10.°)', text: 'El algoritmo utilitarista debe programarse para minimizar el daño global neto en una colisión inevitable.', time: 'Hace 10 min' },
+    { author: 'Camila P. (Estudiante Grado 11.°)', text: 'El principio deontológico impide sacrificar deliberadamente a una persona para salvar a otras tres.', time: 'Hace 25 min' }
   ]);
 
   // Quiz State (Reto Final)
@@ -92,19 +91,20 @@ export default function Sala4({
 
   const handleNextQuestion = () => {
     sound.playClick();
+    setSelectedOption(null);
+    setIsAnswered(false);
+    setTimeLeft(15);
+
     if (currentIdx + 1 < RETO_VISITANTE_QUESTIONS.length) {
       setCurrentIdx((i) => i + 1);
-      setSelectedOption(null);
-      setIsAnswered(false);
-      setTimeLeft(15);
     } else {
       setQuizFinished(true);
       sound.playFanfare();
-      onCompleteQuiz(score + (selectedOption?.isCorrect ? 0 : 0));
+      onCompleteQuiz(score);
       try {
         confetti({
-          particleCount: 150,
-          spread: 100,
+          particleCount: 120,
+          spread: 80,
           origin: { y: 0.5 }
         });
       } catch (e) {}
@@ -121,83 +121,101 @@ export default function Sala4({
     setStreak(0);
     setTimeLeft(15);
     setQuizFinished(false);
+    setQuizStarted(true);
   };
 
-  const handleForumSubmit = (e) => {
+  const handleSendForumArgument = (e) => {
     e.preventDefault();
     if (!forumComment.trim()) return;
-    sound.playPop();
-    setUserArguments([
-      { author: 'Tú (Visitante)', text: forumComment.trim(), time: 'Justo ahora' },
-      ...userArguments
+    sound.playClick();
+    setUserArguments((prev) => [
+      { author: 'Visitante (Tú)', text: forumComment.trim(), time: 'Ahora mismo' },
+      ...prev
     ]);
     setForumComment('');
   };
 
-  const handleVoteSubmit = (e) => {
+  const handleSubmitVote = (e) => {
     e.preventDefault();
     sound.playFanfare();
     setVoteSubmitted(true);
-    try {
-      confetti({
-        particleCount: 70,
-        spread: 80,
-        origin: { y: 0.8 }
-      });
-    } catch (e) {}
   };
 
-  const currentBadge =
-    BADGES_SYSTEM.find((b) => score >= b.minScore) || BADGES_SYSTEM[BADGES_SYSTEM.length - 1];
-
-  const exhibitIcons = ['📰', '📓', '💡', '🐱'];
+  const badge = BADGES_SYSTEM.find((b) => score >= b.minScore) || BADGES_SYSTEM[BADGES_SYSTEM.length - 1];
+  const exhibitIcons = ['🌐', '✍️', '🤖', '📊'];
 
   return (
-    <div className="relative min-h-[calc(100vh-70px)] pb-28 pt-8">
-      {/* Background Lightning with Emerald Glow */}
-      <BackgroundLightning intensity={quizFinished ? 0.3 : 0.8} />
-
-      <div className="container relative z-10 max-w-4xl mx-auto">
-        {/* Top Room Navigation Bar */}
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/[0.08]">
+    <div className="relative min-h-screen pb-32 pt-6">
+      <div className="container relative z-10">
+        {/* Top Navigation Row */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
           <button
             onClick={() => {
               sound.playClick();
               onNavigate('sala3');
             }}
-            className="btn-secondary text-xs"
+            className="btn-secondary"
+            style={{ fontSize: '12px', padding: '0.5rem 1rem' }}
           >
-            <ArrowLeft size={14} /> Pabellón 03: Video Educativo
+            <ArrowLeft size={14} />
+            <span>Volver a Sala 03</span>
           </button>
 
-          <div className="text-right">
-            <span className="text-[11px] font-mono text-emerald-400 font-bold uppercase tracking-wider block">
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--accent-emerald)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block' }}>
               Pabellón 04 • Blogger / WordPress / Wix
             </span>
-            <span className="text-xs text-slate-400">
-              Blogs & Metacognición
+            <span style={{ fontSize: '12px', color: '#94A3B8' }}>
+              Blogs, Metacognición & El Reto Culminante
             </span>
           </div>
         </div>
 
-        {/* Room Header & Concept */}
-        <div className="max-w-2xl mb-10 text-left">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
-            BLOGS Y METACOGNICIÓN
-          </h1>
-          <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-            Reflexión epistemológica y ética digital: la lógica formal en la era de la inteligencia artificial, bitácoras de pensamiento computacional y deliberación colectiva.
-          </p>
+        {/* 2D ANIMATED PAVILION BANNER */}
+        <div className="pavilion-banner-2d" style={{ borderLeft: '4px solid var(--accent-emerald)' }}>
+          <div>
+            <div className="meta-pill mb-3">
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-emerald)' }} />
+              <span>SALA TEMÁTICA 04 • METACOGNICIÓN & DESAFÍO CULMINANTE</span>
+            </div>
+            <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.15 }}>
+              BLOGS & METACOGNICIÓN
+            </h1>
+            <p style={{ fontSize: '0.9rem', color: '#CBD5E1', marginTop: '0.75rem', lineHeight: 1.6, maxWidth: '580px' }}>
+              Documentación reflexiva, bitácoras digitales de resolución de problemas, ética algorítmica en la Inteligencia Artificial y la evaluación cumbre del visitante.
+            </p>
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'rgba(0, 245, 160, 0.1)', color: 'var(--accent-emerald)', border: '1px solid rgba(0, 245, 160, 0.25)', fontFamily: 'var(--font-mono)' }}>
+                Blogger Metacognitivo
+              </span>
+              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'rgba(0, 245, 160, 0.1)', color: 'var(--accent-emerald)', border: '1px solid rgba(0, 245, 160, 0.25)', fontFamily: 'var(--font-mono)' }}>
+                WordPress Case Study
+              </span>
+              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'rgba(0, 245, 160, 0.1)', color: 'var(--accent-emerald)', border: '1px solid rgba(0, 245, 160, 0.25)', fontFamily: 'var(--font-mono)' }}>
+                Wix Digital Portfolio
+              </span>
+            </div>
+          </div>
+
+          {/* 2D Vector Animated Neural Brain Diorama */}
+          <div>
+            <DioramaSala4 />
+          </div>
         </div>
 
-        {/* 4 Exhibit Pedestals (RED 16 to 19) */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-slate-200 uppercase tracking-wider font-mono text-xs">
-              Colección de Recursos Educativos Digitales (RED 16 al 19)
-            </h2>
-            <span className="text-xs text-slate-500 font-mono">
-              Haz clic en cualquier exhibición para examinar detalles
+        {/* 4 EXHIBIT SHOWCASES (RED 16 to 19) */}
+        <div style={{ marginBottom: '3rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <div>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF' }}>
+                Galería de Recursos Educativos Digitales
+              </h2>
+              <p style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                4 obras reflexivas catalogadas (RED 16 al RED 19)
+              </p>
+            </div>
+            <span style={{ fontSize: '11px', color: '#94A3B8', fontFamily: 'var(--font-mono)' }}>
+              Haz clic en un pedestal para ver ficha completa
             </span>
           </div>
 
@@ -209,23 +227,61 @@ export default function Sala4({
                   sound.playClick();
                   setSelectedExhibit(red);
                 }}
-                className="exhibit-card group"
-                style={{ '--card-accent': 'var(--accent-emerald)' }}
+                className="exhibit-pedestal"
+                style={{
+                  '--pedestal-accent': 'var(--accent-emerald)',
+                  '--pedestal-glow': 'rgba(0, 245, 160, 0.2)',
+                  cursor: 'pointer'
+                }}
               >
                 <div>
-                  <div className="text-2xl mb-3">{exhibitIcons[idx]}</div>
-                  <span className="text-[11px] font-mono text-emerald-400 block mb-1">
-                    RED 0{idx + 16}
+                  <div className="pedestal-artwork-2d">
+                    <span style={{ fontSize: '2.5rem' }}>{exhibitIcons[idx]}</span>
+                    <span
+                      style={{
+                        position: 'absolute',
+                        bottom: '6px',
+                        right: '8px',
+                        fontSize: '9px',
+                        fontFamily: 'var(--font-mono)',
+                        padding: '2px 5px',
+                        borderRadius: '4px',
+                        background: 'rgba(0,0,0,0.6)',
+                        color: 'var(--accent-emerald)'
+                      }}
+                    >
+                      RED {idx + 16}
+                    </span>
+                  </div>
+
+                  <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--accent-emerald)', fontWeight: 700, display: 'block', marginBottom: '4px' }}>
+                    {red.herramienta}
                   </span>
-                  <h3 className="text-sm font-bold text-white font-display group-hover:text-emerald-300 transition-colors leading-snug">
+                  <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.35, marginBottom: '6px' }}>
                     {red.title.replace(/^RED #\d+:\s*/, '')}
                   </h3>
+                  <p style={{ fontSize: '0.8rem', color: '#94A3B8', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {red.description}
+                  </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
-                  <span className="text-[11px] truncate max-w-[130px]">{red.formato.split('(')[0]}</span>
-                  <span className="text-emerald-400 font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                    <Eye size={13} /> Ver
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginTop: '1rem',
+                    paddingTop: '0.75rem',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                    fontSize: '11px'
+                  }}
+                >
+                  <span style={{ color: '#64748B', fontFamily: 'var(--font-mono)' }}>
+                    {red.formato.split('(')[0]}
+                  </span>
+                  <span style={{ color: 'var(--accent-emerald)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '3px' }}>
+                    <Eye size={13} />
+                    <span>Inspeccionar</span>
                   </span>
                 </div>
               </div>
@@ -233,91 +289,168 @@ export default function Sala4({
           </div>
         </div>
 
-        {/* Central Hands-On Station: RED #20 Activity */}
-        <div className="gallery-stage mb-12">
-          <div className="meta-pill text-emerald-300 border-emerald-500/30 text-[11px] mb-2">
-            RED #20 • ACTIVIDAD INTERACTIVA DEL VISITANTE
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white font-display">
-            Foro de Deliberación: Dilema Ético-Lógico del Vehículo Autónomo
-          </h2>
-          <p className="text-xs text-slate-400 mt-1 mb-5">
-            {SALA4_DATA.forumDilemma.prompt}
-          </p>
-
-          {/* Voting Buttons */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
-            {SALA4_DATA.forumDilemma.positions.map((pos) => (
-              <button
-                key={pos.id}
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setSelectedForumVote(pos.id);
-                }}
-                className={`p-3.5 rounded-xl border text-left text-xs transition-all ${
-                  selectedForumVote === pos.id
-                    ? 'bg-emerald-500/20 border-emerald-400 text-white shadow-lg'
-                    : 'bg-surface border-subtle hover:border-medium text-slate-300'
-                }`}
-              >
-                <div className="font-semibold mb-1">{pos.label}</div>
-                <div className="text-[11px] font-mono text-emerald-400 font-bold">{pos.pct} de apoyo</div>
-              </button>
-            ))}
+        {/* FORO ÉTICO INTERACTIVO: RED #20 */}
+        <div className="activity-stage-box" style={{ borderTop: '3px solid var(--accent-emerald)', marginBottom: '3.5rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '4px' }}>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', padding: '2px 8px', borderRadius: '4px', background: 'rgba(0, 245, 160, 0.15)', color: 'var(--accent-emerald)', fontWeight: 700 }}>
+                  RED #20 • FORO DE DEBATE ÉTICO
+                </span>
+                <span style={{ fontSize: '11px', color: '#94A3B8' }}>Wix / WordPress Metacognitive Forum</span>
+              </div>
+              <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF' }}>
+                {SALA4_DATA.red20.title}
+              </h2>
+              <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px' }}>
+                {SALA4_DATA.red20.dilemma}
+              </p>
+            </div>
           </div>
 
-          {/* Comment Form */}
-          <form onSubmit={handleForumSubmit} className="flex gap-2 mb-4">
+          {/* Voting Options */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+            {SALA4_DATA.red20.options.map((opt) => {
+              const isSelected = selectedForumVote === opt.id;
+              return (
+                <div
+                  key={opt.id}
+                  onClick={() => {
+                    sound.playClick();
+                    setSelectedForumVote(opt.id);
+                  }}
+                  style={{
+                    padding: '1.25rem',
+                    borderRadius: '14px',
+                    backgroundColor: isSelected ? 'rgba(0, 245, 160, 0.12)' : 'rgba(255, 255, 255, 0.04)',
+                    border: isSelected ? '1px solid var(--accent-emerald)' : '1px solid rgba(255, 255, 255, 0.1)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <span style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', fontWeight: 800, color: isSelected ? 'var(--accent-emerald)' : '#94A3B8' }}>
+                      POSTURA {opt.id.toUpperCase()}
+                    </span>
+                    <span style={{ fontSize: '13px', color: isSelected ? 'var(--accent-emerald)' : '#64748B' }}>
+                      {isSelected ? '✓ Tu Elección' : '○ Elegir'}
+                    </span>
+                  </div>
+                  <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '0.4rem' }}>
+                    {opt.title}
+                  </h4>
+                  <p style={{ fontSize: '0.85rem', color: '#CBD5E1', lineHeight: 1.45 }}>
+                    {opt.argument}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Argument Submission Box */}
+          <form onSubmit={handleSendForumArgument} style={{ display: 'flex', gap: '0.6rem', marginBottom: '1.5rem' }}>
             <input
               type="text"
               value={forumComment}
               onChange={(e) => setForumComment(e.target.value)}
-              placeholder="Aporta tu razonamiento ético-lógico..."
-              className="flex-1 px-4 py-2.5 rounded-xl bg-surface border border-subtle text-white placeholder-slate-500 text-xs focus:border-emerald-400 focus:outline-none"
+              placeholder="Aporta un argumento ético o contraejemplo lógico al foro..."
+              style={{
+                flex: 1,
+                padding: '0.75rem 1rem',
+                borderRadius: '10px',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                color: '#FFFFFF',
+                fontSize: '0.9rem',
+                outline: 'none'
+              }}
             />
-            <button type="submit" className="btn-primary text-xs" style={{ background: 'var(--accent-emerald)', color: '#000' }}>
-              <Send size={13} /> Opinar
+            <button
+              type="submit"
+              className="btn-primary"
+              style={{
+                background: 'linear-gradient(135deg, #00F5A0 0%, #0088FF 100%)',
+                boxShadow: '0 4px 15px rgba(0, 245, 160, 0.4)'
+              }}
+            >
+              <Send size={15} />
+              <span>Publicar</span>
             </button>
           </form>
 
-          {/* Arguments */}
-          <div className="space-y-2">
-            {userArguments.map((arg, i) => (
-              <div key={i} className="p-3 rounded-xl bg-surface border border-subtle text-xs text-left">
-                <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 mb-0.5">
-                  <span className="font-bold text-emerald-400">{arg.author}</span>
-                  <span>{arg.time}</span>
+          {/* Recent Forum Arguments */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            {userArguments.map((arg, idx) => (
+              <div
+                key={idx}
+                style={{
+                  padding: '0.75rem 1rem',
+                  borderRadius: '10px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.06)'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--accent-emerald)' }}>
+                    {arg.author}
+                  </span>
+                  <span style={{ fontSize: '10px', color: '#64748B', fontFamily: 'var(--font-mono)' }}>
+                    {arg.time}
+                  </span>
                 </div>
-                <p className="text-slate-300">{arg.text}</p>
+                <p style={{ fontSize: '0.85rem', color: '#E2E8F0', lineHeight: 1.4 }}>
+                  {arg.text}
+                </p>
               </div>
             ))}
           </div>
         </div>
 
         {/* =========================================================================
-            🏆 EL RETO CULMINANTE DEL VISITANTE (QUIZ DE 5 PREGUNTAS)
-           ========================================================================= */}
-        <div className="gallery-stage mt-14" style={{ borderColor: 'rgba(245, 158, 11, 0.3)' }}>
-          <div className="text-center mb-6">
-            <div className="meta-pill text-amber-300 border-amber-500/30 text-[11px] mb-2">
-              🏆 MISIÓN CULMINANTE DEL MUSEO
+            EL CUARTO ELEMENTO DEL MUSEO: EL RETO CULMINANTE DEL VISITANTE (QUIZ)
+            ========================================================================= */}
+        <div
+          id="gran-reto-section"
+          className="activity-stage-box"
+          style={{
+            borderTop: '4px solid var(--accent-amber)',
+            boxShadow: '0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(255, 184, 0, 0.15)',
+            marginBottom: '3.5rem'
+          }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+            <div className="meta-pill mb-2" style={{ color: '#FFB800', borderColor: 'rgba(255, 184, 0, 0.3)' }}>
+              <span>🏆 EL CUARTO ELEMENTO • RETO CULMINANTE PARA EL VISITANTE</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
-              EL RETO DEL VISITANTE
+            <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.2 }}>
+              DESAFÍO MAESTRO DE PENSAMIENTO LÓGICO
             </h2>
-            <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-              5 preguntas de alta demanda cognitiva sobre pensamiento lógico, algoritmos y herramientas TIC.
+            <p style={{ fontSize: '0.9rem', color: '#94A3B8', maxWidth: '600px', margin: '0.5rem auto 0' }}>
+              Pon a prueba tus competencias deductivas, reconocimiento de algoritmos y evaluación crítica de TIC a través de 5 preguntas formativas cronometradas.
             </p>
           </div>
 
           {!quizStarted ? (
-            <div className="text-center p-6 space-y-4">
-              <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center justify-center text-3xl mx-auto">
+            <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+              <div
+                style={{
+                  width: '70px',
+                  height: '70px',
+                  borderRadius: '20px',
+                  background: 'rgba(255, 184, 0, 0.1)',
+                  border: '1px solid rgba(255, 184, 0, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '32px',
+                  margin: '0 auto 1.25rem',
+                  boxShadow: '0 0 25px rgba(255, 184, 0, 0.2)'
+                }}
+              >
                 🎯
               </div>
-              <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto">
-                Dispones de 15 segundos por pregunta. Las respuestas correctas otorgan puntos y bonificaciones por velocidad para alcanzar la insignia de Gran Maestro.
+              <p style={{ fontSize: '0.95rem', color: '#E2E8F0', maxWidth: '500px', margin: '0 auto 1.75rem', lineHeight: 1.6 }}>
+                Dispones de <strong>15 segundos</strong> por interrogante. Las respuestas veloces y las rachas consecutivas multiplican tu puntuación para desbloquear el <strong>Certificado Oficial de Visitante</strong>.
               </p>
               <button
                 id="start-visitor-quiz-btn"
@@ -325,57 +458,105 @@ export default function Sala4({
                   sound.playFanfare();
                   setQuizStarted(true);
                 }}
-                className="btn-primary text-xs"
-                style={{ background: 'var(--accent-gold)', color: '#000' }}
+                className="btn-primary"
+                style={{
+                  background: 'linear-gradient(135deg, #FFB800 0%, #FF8800 100%)',
+                  color: '#000000',
+                  padding: '0.9rem 2.2rem',
+                  fontSize: '1rem',
+                  boxShadow: '0 4px 25px rgba(255, 184, 0, 0.4)'
+                }}
               >
-                <Trophy size={16} />
-                <span>Iniciar Desafío</span>
+                <Trophy size={18} />
+                <span>Iniciar Desafío Culminante</span>
               </button>
             </div>
           ) : !quizFinished ? (
-            <div className="space-y-5">
-              {/* Quiz Header Bar */}
-              <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
-                <div className="flex items-center gap-2">
-                  <span className="w-7 h-7 rounded-lg bg-amber-400 text-black flex items-center justify-center font-mono font-bold text-xs">
+            <div>
+              {/* Question Top Status */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingBottom: '0.75rem',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                  marginBottom: '1.25rem'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <span
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '8px',
+                      background: 'var(--accent-amber)',
+                      color: '#000000',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontFamily: 'var(--font-mono)',
+                      fontWeight: 800,
+                      fontSize: '13px'
+                    }}
+                  >
                     {currentIdx + 1}/5
                   </span>
-                  <span className="text-xs text-slate-400 font-mono">
+                  <span style={{ fontSize: '12px', color: '#94A3B8', fontFamily: 'var(--font-mono)' }}>
                     {currentQ.sala} • {currentQ.herramienta}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-4 text-xs font-mono">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>
                   {streak > 1 && (
-                    <span className="text-amber-400 font-bold">
-                      🔥 x{streak}
+                    <span style={{ color: '#FFB800', fontWeight: 800 }}>
+                      🔥 Racha x{streak}
                     </span>
                   )}
-                  <span className="text-slate-300 font-bold">{totalPoints} pts</span>
-                  <span className={`px-2.5 py-0.5 rounded-full font-bold border ${timeLeft <= 5 ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse' : 'bg-white/5 text-slate-300 border-white/10'}`}>
+                  <span style={{ color: '#FFFFFF', fontWeight: 700 }}>
+                    {totalPoints} pts
+                  </span>
+                  <span
+                    style={{
+                      padding: '3px 10px',
+                      borderRadius: '999px',
+                      fontWeight: 800,
+                      backgroundColor: timeLeft <= 5 ? 'rgba(255, 42, 109, 0.2)' : 'rgba(255, 255, 255, 0.08)',
+                      color: timeLeft <= 5 ? '#FF2A6D' : '#00E5FF',
+                      border: timeLeft <= 5 ? '1px solid rgba(255, 42, 109, 0.5)' : '1px solid rgba(0, 229, 255, 0.3)'
+                    }}
+                  >
                     ⏱️ {timeLeft}s
                   </span>
                 </div>
               </div>
 
-              {/* Question Text */}
-              <h3 className="text-lg sm:text-xl font-bold text-white text-center py-2 font-display">
+              {/* Question Heading */}
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#FFFFFF', textAlign: 'center', padding: '0.75rem 0 1.5rem', lineHeight: 1.4 }}>
                 {currentQ.question}
               </h3>
 
-              {/* 4 Clean Options */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* 4 Interactive Options */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 {currentQ.options.map((opt) => {
                   const isThisSelected = selectedOption?.id === opt.id;
-                  let style = 'bg-surface border-subtle hover:border-medium';
+                  let borderCol = 'rgba(255, 255, 255, 0.12)';
+                  let bgCol = 'rgba(255, 255, 255, 0.04)';
+                  let textCol = '#F1F5F9';
 
                   if (isAnswered) {
                     if (opt.isCorrect) {
-                      style = 'bg-emerald-500/15 border-emerald-500/50 text-emerald-200';
+                      borderCol = 'rgba(0, 245, 160, 0.6)';
+                      bgCol = 'rgba(0, 245, 160, 0.15)';
+                      textCol = '#00F5A0';
                     } else if (isThisSelected && !opt.isCorrect) {
-                      style = 'bg-rose-500/15 border-rose-500/50 text-rose-200';
+                      borderCol = 'rgba(255, 42, 109, 0.6)';
+                      bgCol = 'rgba(255, 42, 109, 0.15)';
+                      textCol = '#FF2A6D';
                     } else {
-                      style = 'opacity-30 border-subtle';
+                      borderCol = 'rgba(255, 255, 255, 0.04)';
+                      bgCol = 'rgba(255, 255, 255, 0.01)';
+                      textCol = '#475569';
                     }
                   }
 
@@ -384,77 +565,126 @@ export default function Sala4({
                       key={opt.id}
                       disabled={isAnswered}
                       onClick={() => handleSelectOption(opt)}
-                      className={`p-4 rounded-xl border text-left text-xs sm:text-sm font-semibold transition-all flex items-center gap-3 ${style}`}
+                      style={{
+                        padding: '1rem 1.25rem',
+                        borderRadius: '12px',
+                        backgroundColor: bgCol,
+                        border: `1px solid ${borderCol}`,
+                        color: textCol,
+                        textAlign: 'left',
+                        cursor: isAnswered ? 'default' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        justifyContent: 'space-between',
+                        gap: '0.75rem',
+                        transition: 'all 0.2s ease',
+                        fontSize: '0.9rem',
+                        fontWeight: 500
+                      }}
                     >
-                      <span className="w-8 h-8 rounded-lg bg-black/40 flex items-center justify-center text-sm font-mono shrink-0">
-                        {SHAPES_ICONS[opt.shape]}
+                      <span style={{ display: 'flex', gap: '0.6rem' }}>
+                        <strong style={{ fontFamily: 'var(--font-mono)' }}>{opt.id}.</strong>
+                        <span>{opt.text}</span>
                       </span>
-                      <span className="flex-1 leading-snug">{opt.text}</span>
-                      {isAnswered && opt.isCorrect && <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />}
-                      {isAnswered && isThisSelected && !opt.isCorrect && <XCircle size={16} className="text-rose-400 shrink-0" />}
+                      {isAnswered && (
+                        <span>
+                          {opt.isCorrect ? <CheckCircle2 size={16} color="#00F5A0" /> : isThisSelected ? <XCircle size={16} color="#FF2A6D" /> : null}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
               </div>
 
-              {/* Formative Rationale */}
+              {/* Feedback and Next Button */}
               {isAnswered && (
-                <div className="mt-4 p-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-left animate-fadeIn">
-                  <span className="font-bold text-amber-300 block mb-1">Fundamentación Didáctica:</span>
-                  <p className="text-slate-300">{currentQ.feedback}</p>
-
-                  <div className="mt-3 flex justify-end">
-                    <button
-                      onClick={handleNextQuestion}
-                      className="btn-primary text-xs"
-                      style={{ background: 'var(--accent-gold)', color: '#000' }}
-                    >
-                      {currentIdx + 1 < RETO_VISITANTE_QUESTIONS.length ? 'Siguiente Pregunta ➔' : 'Ver Resultados 🏆'}
-                    </button>
+                <div
+                  style={{
+                    padding: '1rem 1.25rem',
+                    borderRadius: '12px',
+                    backgroundColor: selectedOption?.isCorrect ? 'rgba(0, 245, 160, 0.1)' : 'rgba(255, 42, 109, 0.1)',
+                    border: selectedOption?.isCorrect ? '1px solid rgba(0, 245, 160, 0.3)' : '1px solid rgba(255, 42, 109, 0.3)',
+                    marginTop: '1.25rem',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '1rem'
+                  }}
+                >
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: selectedOption?.isCorrect ? '#00F5A0' : '#FF2A6D', marginBottom: '2px' }}>
+                      {selectedOption?.isCorrect ? '¡Respuesta Correcta!' : 'Respuesta Incorrecta'}
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: '#CBD5E1' }}>
+                      {currentQ.explanation}
+                    </div>
                   </div>
+
+                  <button
+                    onClick={handleNextQuestion}
+                    className="btn-primary"
+                    style={{
+                      background: 'var(--accent-amber)',
+                      color: '#000000',
+                      fontWeight: 700
+                    }}
+                  >
+                    <span>{currentIdx + 1 < RETO_VISITANTE_QUESTIONS.length ? 'Siguiente Pregunta' : 'Ver Resultados'}</span>
+                    <ArrowRight size={15} />
+                  </button>
                 </div>
               )}
             </div>
           ) : (
-            /* Results Podium & Certificate Trigger */
-            <div className="text-center p-6 space-y-4 animate-fadeIn">
-              <div className="text-4xl">{currentBadge.emoji}</div>
-              <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-amber-400 block">
-                {currentBadge.rank}
+            /* Quiz Completed View */
+            <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+              <div style={{ fontSize: '3.5rem', marginBottom: '0.5rem' }}>{badge.icon}</div>
+              <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--accent-amber)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                INSIGNIA CONQUISTADA
               </span>
-              <h3 className="text-2xl font-bold text-white font-display">
-                {currentBadge.title}
+              <h3 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#FFFFFF', marginTop: '4px' }}>
+                {badge.title}
               </h3>
-              <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
-                {currentBadge.description}
+              <p style={{ fontSize: '0.95rem', color: '#94A3B8', maxWidth: '500px', margin: '0.5rem auto 1.5rem', lineHeight: 1.5 }}>
+                {badge.description}
               </p>
 
-              <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/5 font-mono text-xs text-slate-300">
-                <span>Aciertos: <strong className="text-emerald-400">{score} / 5</strong></span>
-                <span>•</span>
-                <span>Puntos: <strong className="text-amber-400">{totalPoints}</strong></span>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '2rem', fontFamily: 'var(--font-mono)' }}>
+                <div>
+                  <div style={{ fontSize: '11px', color: '#64748B' }}>ACIERTOS</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#00F5A0' }}>{score} / 5</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '11px', color: '#64748B' }}>PUNTOS TOTALES</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#FFB800' }}>{totalPoints}</div>
+                </div>
               </div>
 
-              <div className="pt-4 flex flex-wrap justify-center gap-3">
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}>
                 <button
-                  id="claim-certificate-btn"
                   onClick={() => {
                     sound.playFanfare();
                     onOpenCertificate();
                   }}
-                  className="btn-primary text-xs"
-                  style={{ background: 'var(--accent-gold)', color: '#000' }}
+                  className="btn-primary"
+                  style={{
+                    background: 'linear-gradient(135deg, #FFB800 0%, #FF8800 100%)',
+                    color: '#000000',
+                    fontSize: '0.95rem',
+                    padding: '0.9rem 1.8rem'
+                  }}
                 >
-                  <Award size={15} />
-                  <span>Emitir y Descargar Certificado</span>
+                  <Award size={18} />
+                  <span>Generar Certificado Oficial</span>
                 </button>
 
                 <button
                   onClick={handleRestartQuiz}
-                  className="btn-secondary text-xs"
+                  className="btn-secondary"
                 >
-                  <RotateCcw size={13} />
-                  <span>Repetir Reto</span>
+                  <RotateCcw size={16} />
+                  <span>Reintentar Desafío</span>
                 </button>
               </div>
             </div>
@@ -462,100 +692,121 @@ export default function Sala4({
         </div>
 
         {/* =========================================================================
-            🗳️ VOTACIÓN RÁPIDA DE LA EXPERIENCIA
-           ========================================================================= */}
-        <div className="gallery-stage mt-10">
-          <div className="flex items-center gap-2 mb-2">
-            <Star size={18} className="text-amber-400" />
-            <h3 className="text-lg font-bold text-white font-display">
-              Votación Rápida: Evalúa tu Visita al Museo
+            ESTACIÓN DE VALORACIÓN RÁPIDA DE LA EXPERIENCIA
+            ========================================================================= */}
+        <div className="activity-stage-box" style={{ borderTop: '3px solid rgba(255, 255, 255, 0.2)' }}>
+          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--accent-cyan)', fontWeight: 700, textTransform: 'uppercase' }}>
+              RETROALIMENTACIÓN DE LA COMUNIDAD EDUCATIVA
+            </span>
+            <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF', marginTop: '2px' }}>
+              Valoración Rápida de la Exposición
             </h3>
+            <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px' }}>
+              Evalúa la calidad didáctica, inmersión y pertinencia curricular de los 20 REDs.
+            </p>
           </div>
-          <p className="text-xs text-slate-400 mb-6">
-            Tu valoración permite optimizar la calidad didáctica de los Recursos Educativos Digitales.
-          </p>
 
           {!voteSubmitted ? (
-            <form onSubmit={handleVoteSubmit} className="space-y-5 text-left">
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-2">
-                  1. Calificación General de la Exposición:
-                </label>
-                <PeekRating
-                  count={5}
-                  value={starRating}
-                  onChange={setStarRating}
-                  size={24}
-                />
+            <form onSubmit={handleSubmitVote} style={{ maxWidth: '600px', margin: '0 auto' }}>
+              {/* Star Rating */}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => {
+                      sound.playClick();
+                      setStarRating(s);
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '1.8rem',
+                      color: s <= starRating ? '#FFB800' : '#475569',
+                      transition: 'transform 0.15s ease'
+                    }}
+                  >
+                    ★
+                  </button>
+                ))}
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-2">
-                  2. ¿Qué emoticón resume tu experiencia?
+              {/* Sala Favorita */}
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94A3B8', marginBottom: '0.4rem' }}>
+                  ¿Cuál fue tu pabellón favorito?
                 </label>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { emoji: '😍', label: 'Fascinante' },
-                    { emoji: '🚀', label: 'Innovador' },
-                    { emoji: '💡', label: 'Didáctico' },
-                    { emoji: '🎮', label: 'Divertido' },
-                    { emoji: '👏', label: 'Excelente' }
-                  ].map((item) => (
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  {['Sala 1: Organizadores', 'Sala 2: Gamificación', 'Sala 3: Video Interactivo', 'Sala 4: Blogs & IA'].map((name) => (
                     <button
-                      key={item.emoji}
+                      key={name}
                       type="button"
                       onClick={() => {
-                        sound.playHover();
-                        setSelectedEmotion(item.emoji);
+                        sound.playClick();
+                        setFavoriteRoom(name);
                       }}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all ${
-                        selectedEmotion === item.emoji
-                          ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200'
-                          : 'bg-surface border-subtle text-slate-400 hover:text-white'
-                      }`}
+                      style={{
+                        padding: '0.45rem 0.85rem',
+                        borderRadius: '8px',
+                        fontSize: '11px',
+                        backgroundColor: favoriteRoom === name ? 'rgba(0, 229, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                        border: favoriteRoom === name ? '1px solid var(--accent-cyan)' : '1px solid rgba(255, 255, 255, 0.1)',
+                        color: favoriteRoom === name ? '#FFFFFF' : '#94A3B8',
+                        cursor: 'pointer'
+                      }}
                     >
-                      <span>{item.emoji}</span>
-                      <span>{item.label}</span>
+                      {name}
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-2">
-                  3. Comentario corto o sugerencia:
-                </label>
+              {/* Feedback text */}
+              <div style={{ marginBottom: '1.25rem' }}>
                 <textarea
                   value={feedbackComment}
                   onChange={(e) => setFeedbackComment(e.target.value)}
-                  placeholder="Comparte tu opinión sobre los REDs explorados..."
-                  rows={2}
-                  maxLength={180}
-                  className="w-full px-4 py-2 rounded-xl bg-surface border border-subtle text-white placeholder-slate-500 text-xs focus:border-emerald-400 focus:outline-none"
+                  placeholder="Comentario sobre el diseño didáctico del museo o sugerencias de mejora..."
+                  rows={3}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    borderRadius: '10px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    color: '#FFFFFF',
+                    fontSize: '0.85rem',
+                    outline: 'none',
+                    resize: 'none'
+                  }}
                 />
               </div>
 
-              <button
-                type="submit"
-                className="btn-primary text-xs"
-                style={{ background: 'var(--accent-emerald)', color: '#000' }}
-              >
-                <Send size={13} />
-                <span>Enviar Evaluación</span>
-              </button>
+              <div style={{ textAlign: 'center' }}>
+                <button
+                  type="submit"
+                  className="btn-primary"
+                >
+                  <Send size={15} />
+                  <span>Enviar Votación & Calificación</span>
+                </button>
+              </div>
             </form>
           ) : (
-            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
-              <span className="text-2xl">{selectedEmotion}</span>
-              <p className="text-xs font-semibold text-emerald-300 mt-1">
-                ¡Gracias por registrar tu evaluación de {starRating} estrellas!
+            <div style={{ textAlign: 'center', padding: '1.5rem', color: '#00F5A0' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✓</div>
+              <h4 style={{ fontSize: '1.15rem', fontWeight: 700 }}>¡Gracias por tu valoración!</h4>
+              <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '4px' }}>
+                Tu opinión enriquece la bitácora de evaluación continua del museo interactivo.
               </p>
             </div>
           )}
         </div>
 
-        {/* Room Navigation Footer */}
-        <div className="mt-12 pt-6 border-t border-white/[0.08] flex items-center justify-between text-xs">
+        {/* Bottom Navigation */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2.5rem' }}>
           <button
             onClick={() => {
               sound.playClick();
@@ -563,7 +814,8 @@ export default function Sala4({
             }}
             className="btn-secondary"
           >
-            <ArrowLeft size={14} /> Pabellón 03: Video Educativo
+            <ArrowLeft size={16} />
+            <span>Sala 03</span>
           </button>
 
           <button
@@ -571,19 +823,25 @@ export default function Sala4({
               sound.playClick();
               onNavigate('lobby');
             }}
-            className="btn-secondary"
+            className="btn-primary"
+            style={{
+              background: 'linear-gradient(135deg, #00E5FF 0%, #0088FF 100%)',
+              boxShadow: '0 4px 20px rgba(0, 229, 255, 0.35)'
+            }}
           >
-            <span>Volver al Lobby Principal</span>
-            <ArrowRight size={14} />
+            <span>Volver al Lobby Central</span>
+            <ArrowRight size={16} />
           </button>
         </div>
       </div>
 
-      {/* Exhibit Inspection Modal */}
-      <ExhibitModal
-        exhibit={selectedExhibit}
-        onClose={() => setSelectedExhibit(null)}
-      />
+      {/* Exhibit Detail Modal */}
+      {selectedExhibit && (
+        <ExhibitModal
+          exhibit={selectedExhibit}
+          onClose={() => setSelectedExhibit(null)}
+        />
+      )}
     </div>
   );
 }

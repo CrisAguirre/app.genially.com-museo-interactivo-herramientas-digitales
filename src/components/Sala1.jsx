@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, RefreshCw, Eye, CheckCircle2, AlertCircle, MoveUp, MoveDown } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, RefreshCw, Eye, CheckCircle2, AlertCircle, MoveUp, MoveDown, Compass } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '../utils/audio';
 import { SALA1_DATA } from '../data/museumData';
-import BackgroundGalaxy from './reactbits/BackgroundGalaxy';
 import ExhibitModal from './ExhibitModal';
+import { DioramaSala1 } from './ambient/PavilionDioramas2D';
 
 export default function Sala1({ onNavigate = () => {} }) {
   const [selectedExhibit, setSelectedExhibit] = useState(null);
@@ -55,51 +55,77 @@ export default function Sala1({ onNavigate = () => {} }) {
   const exhibitIcons = ['🧠', '🔀', '🌿', '💬'];
 
   return (
-    <div className="relative min-h-[calc(100vh-70px)] pb-28 pt-8">
-      {/* Subtle Background */}
-      <BackgroundGalaxy speed={0.4} starCount={120} nebulaColor="rgba(0, 210, 211, 0.08)" />
-
+    <div className="relative min-h-screen pb-32 pt-6">
       <div className="container relative z-10">
-        {/* Top Room Navigation Bar */}
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/[0.08]">
+        {/* Top Navigation Row */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
           <button
             onClick={() => {
               sound.playClick();
               onNavigate('lobby');
             }}
-            className="btn-secondary text-xs"
+            className="btn-secondary"
+            style={{ fontSize: '12px', padding: '0.5rem 1rem' }}
           >
-            <ArrowLeft size={14} /> Volver al Lobby
+            <ArrowLeft size={14} />
+            <span>Volver al Lobby</span>
           </button>
 
-          <div className="text-right">
-            <span className="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider block">
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--accent-cyan)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block' }}>
               Pabellón 01 • Padlet / Canva / MindMeister
             </span>
-            <span className="text-xs text-slate-400">
-              Organizadores Gráficos y Algoritmos
+            <span style={{ fontSize: '12px', color: '#94A3B8' }}>
+              Organizadores Gráficos y Modelado Algorítmico
             </span>
           </div>
         </div>
 
-        {/* Room Header & Concept */}
-        <div className="max-w-2xl mb-10 text-left">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
-            ORGANIZADORES GRÁFICOS
-          </h1>
-          <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-            Representación visual del pensamiento lógico: razonamiento deductivo, inductivo y modelado algorítmico mediante mapas conceptuales, diagramas de flujo y murales colaborativos.
-          </p>
+        {/* 2D ANIMATED PAVILION BANNER */}
+        <div className="pavilion-banner-2d" style={{ borderLeft: '4px solid var(--accent-cyan)' }}>
+          <div>
+            <div className="meta-pill mb-3">
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-cyan)' }} />
+              <span>SALA TEMÁTICA 01 • LÓGICA ESTRUCTURAL</span>
+            </div>
+            <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.15 }}>
+              ORGANIZADORES GRÁFICOS
+            </h1>
+            <p style={{ fontSize: '0.9rem', color: '#CBD5E1', marginTop: '0.75rem', lineHeight: 1.6, maxWidth: '580px' }}>
+              Representación visual del pensamiento deductivo, mapas conceptuales jerárquicos y diagramas de flujo para la descomposición sistemática de problemas cotidianos y matemáticos.
+            </p>
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'rgba(0, 229, 255, 0.1)', color: 'var(--accent-cyan)', border: '1px solid rgba(0, 229, 255, 0.25)', fontFamily: 'var(--font-mono)' }}>
+                MindMeister
+              </span>
+              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'rgba(0, 229, 255, 0.1)', color: 'var(--accent-cyan)', border: '1px solid rgba(0, 229, 255, 0.25)', fontFamily: 'var(--font-mono)' }}>
+                Canva Infographics
+              </span>
+              <span style={{ fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'rgba(0, 229, 255, 0.1)', color: 'var(--accent-cyan)', border: '1px solid rgba(0, 229, 255, 0.25)', fontFamily: 'var(--font-mono)' }}>
+                Padlet Mural
+              </span>
+            </div>
+          </div>
+
+          {/* 2D Vector Animated Flowchart Diorama */}
+          <div>
+            <DioramaSala1 />
+          </div>
         </div>
 
-        {/* 4 Exhibit Pedestals (RED 1 to 4) */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-slate-200 uppercase tracking-wider font-mono text-xs">
-              Colección de Recursos Educativos Digitales (RED 1 al 4)
-            </h2>
-            <span className="text-xs text-slate-500 font-mono">
-              Haz clic en cualquier exhibición para examinar detalles
+        {/* 4 EXHIBIT SHOWCASES (RED 1 to 4) */}
+        <div style={{ marginBottom: '3rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <div>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF' }}>
+                Galería de Recursos Educativos Digitales
+              </h2>
+              <p style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                4 obras conceptuales catalogadas (RED 01 al RED 04)
+              </p>
+            </div>
+            <span style={{ fontSize: '11px', color: '#94A3B8', fontFamily: 'var(--font-mono)' }}>
+              Haz clic en un pedestal para ver ficha completa
             </span>
           </div>
 
@@ -111,23 +137,62 @@ export default function Sala1({ onNavigate = () => {} }) {
                   sound.playClick();
                   setSelectedExhibit(red);
                 }}
-                className="exhibit-card group"
-                style={{ '--card-accent': 'var(--accent-cyan)' }}
+                className="exhibit-pedestal"
+                style={{
+                  '--pedestal-accent': 'var(--accent-cyan)',
+                  '--pedestal-glow': 'rgba(0, 229, 255, 0.2)',
+                  cursor: 'pointer'
+                }}
               >
                 <div>
-                  <div className="text-2xl mb-3">{exhibitIcons[idx]}</div>
-                  <span className="text-[11px] font-mono text-cyan-400 block mb-1">
-                    RED 0{idx + 1}
+                  {/* Pedestal 2D Mini Graphic */}
+                  <div className="pedestal-artwork-2d">
+                    <span style={{ fontSize: '2.5rem' }}>{exhibitIcons[idx]}</span>
+                    <span
+                      style={{
+                        position: 'absolute',
+                        bottom: '6px',
+                        right: '8px',
+                        fontSize: '9px',
+                        fontFamily: 'var(--font-mono)',
+                        padding: '2px 5px',
+                        borderRadius: '4px',
+                        background: 'rgba(0,0,0,0.6)',
+                        color: 'var(--accent-cyan)'
+                      }}
+                    >
+                      RED 0{idx + 1}
+                    </span>
+                  </div>
+
+                  <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--accent-cyan)', fontWeight: 700, display: 'block', marginBottom: '4px' }}>
+                    {red.herramienta}
                   </span>
-                  <h3 className="text-sm font-bold text-white font-display group-hover:text-cyan-300 transition-colors leading-snug">
+                  <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.35, marginBottom: '6px' }}>
                     {red.title.replace(/^RED #\d+:\s*/, '')}
                   </h3>
+                  <p style={{ fontSize: '0.8rem', color: '#94A3B8', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {red.description}
+                  </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
-                  <span className="text-[11px] truncate max-w-[130px]">{red.formato.split('(')[0]}</span>
-                  <span className="text-cyan-400 font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                    <Eye size={13} /> Ver
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginTop: '1rem',
+                    paddingTop: '0.75rem',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                    fontSize: '11px'
+                  }}
+                >
+                  <span style={{ color: '#64748B', fontFamily: 'var(--font-mono)' }}>
+                    {red.formato.split('(')[0]}
+                  </span>
+                  <span style={{ color: 'var(--accent-cyan)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '3px' }}>
+                    <Eye size={13} />
+                    <span>Inspeccionar</span>
                   </span>
                 </div>
               </div>
@@ -135,98 +200,143 @@ export default function Sala1({ onNavigate = () => {} }) {
           </div>
         </div>
 
-        {/* Central Hands-On Station: RED #5 Activity */}
-        <div className="gallery-stage mt-10">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/[0.08] mb-6 gap-3">
+        {/* INTERACTIVE ACTIVITY STATION: RED #5 */}
+        <div className="activity-stage-box" style={{ borderTop: '3px solid var(--accent-cyan)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
             <div>
-              <div className="meta-pill text-cyan-300 border-cyan-500/30 text-[11px] mb-1.5">
-                RED #5 • ACTIVIDAD INTERACTIVA DEL VISITANTE
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '4px' }}>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', padding: '2px 8px', borderRadius: '4px', background: 'rgba(0, 229, 255, 0.15)', color: 'var(--accent-cyan)', fontWeight: 700 }}>
+                  RED #05 • ESTACIÓN PRÁCTICA
+                </span>
+                <span style={{ fontSize: '11px', color: '#94A3B8' }}>MindMeister & Canva</span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white font-display">
-                Clasificador Algorítmico: Secuencia Lógica de Verificación
+              <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF' }}>
+                {SALA1_DATA.red5.title}
               </h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Ordena los 5 pasos del algoritmo para "Verificar una noticia dudosa antes de compartirla". Utiliza las flechas para reordenar la secuencia.
+              <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '2px' }}>
+                {SALA1_DATA.red5.instruction}
               </p>
             </div>
 
             <button
               onClick={handleReset}
-              className="btn-secondary text-xs self-start sm:self-center"
+              className="btn-secondary"
+              style={{ fontSize: '12px', padding: '0.45rem 0.9rem' }}
             >
-              <RefreshCw size={13} /> Reiniciar
+              <RefreshCw size={13} />
+              <span>Restablecer Orden</span>
             </button>
           </div>
 
-          {/* Clean Step Rows */}
-          <div className="space-y-2.5">
-            {steps.map((st, idx) => (
+          {/* Reordering Step List */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '1.5rem' }}>
+            {steps.map((step, idx) => (
               <div
-                key={st.id}
-                className={`p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 ${
-                  isVerified
-                    ? st.correctIndex === idx
-                      ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
-                      : 'bg-rose-500/10 border-rose-500/40 text-rose-200'
-                    : 'bg-surface border-subtle hover:border-medium'
-                }`}
+                key={step.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '0.85rem 1.25rem',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: isVerified
+                    ? step.correctIndex === idx
+                      ? '1px solid rgba(0, 245, 160, 0.5)'
+                      : '1px solid rgba(255, 42, 109, 0.5)'
+                    : '1px solid rgba(255, 255, 255, 0.08)',
+                  transition: 'all 0.2s ease'
+                }}
               >
-                <div className="flex items-center gap-3">
-                  <span className="w-7 h-7 rounded-lg bg-white/[0.06] text-white flex items-center justify-center font-mono font-bold text-xs shrink-0">
-                    {idx + 1}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <span
+                    style={{
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(0, 229, 255, 0.12)',
+                      color: 'var(--accent-cyan)',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '12px',
+                      fontWeight: 800,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    0{idx + 1}
                   </span>
-                  <p className="text-xs sm:text-sm font-medium text-slate-200">
-                    {st.text}
-                  </p>
+                  <span style={{ fontSize: '0.9rem', color: '#F1F5F9', fontWeight: 500 }}>
+                    {step.text}
+                  </span>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <button
                     disabled={idx === 0}
                     onClick={() => moveStep(idx, -1)}
-                    className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-20 text-white flex items-center justify-center transition-colors"
+                    style={{
+                      padding: '6px',
+                      borderRadius: '6px',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      color: idx === 0 ? '#475569' : '#FFFFFF',
+                      cursor: idx === 0 ? 'not-allowed' : 'pointer'
+                    }}
+                    title="Subir paso"
                   >
-                    <MoveUp size={13} />
+                    <MoveUp size={14} />
                   </button>
                   <button
                     disabled={idx === steps.length - 1}
                     onClick={() => moveStep(idx, 1)}
-                    className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-20 text-white flex items-center justify-center transition-colors"
+                    style={{
+                      padding: '6px',
+                      borderRadius: '6px',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      color: idx === steps.length - 1 ? '#475569' : '#FFFFFF',
+                      cursor: idx === steps.length - 1 ? 'not-allowed' : 'pointer'
+                    }}
+                    title="Bajar paso"
                   >
-                    <MoveDown size={13} />
+                    <MoveDown size={14} />
                   </button>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Validation Bar */}
-          <div className="mt-6 pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+          {/* Action Bar */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
             <button
               onClick={handleVerify}
-              className="btn-primary text-xs"
+              className="btn-primary"
             >
-              <Check size={15} />
-              <span>Validar Secuencia Algorítmica</span>
+              <Check size={16} />
+              <span>Verificar Secuencia Lógica</span>
             </button>
 
             {isVerified && (
               <div
-                className={`text-xs font-semibold px-3.5 py-1.5 rounded-xl flex items-center gap-2 ${
-                  isCorrect
-                    ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
-                    : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
-                }`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  color: isCorrect ? '#00F5A0' : '#FF2A6D'
+                }}
               >
                 {isCorrect ? (
                   <>
-                    <CheckCircle2 size={15} />
-                    <span>¡Secuencia correcta! El algoritmo cumple con la deducción lógica adecuada.</span>
+                    <CheckCircle2 size={18} />
+                    <span>¡Secuencia correcta! Has modelado el algoritmo con éxito.</span>
                   </>
                 ) : (
                   <>
-                    <AlertCircle size={15} />
-                    <span>La secuencia presenta inconsistencias. Analiza qué acción es previa a las demás.</span>
+                    <AlertCircle size={18} />
+                    <span>Secuencia incorrecta. Ajusta el orden y reintenta.</span>
                   </>
                 )}
               </div>
@@ -234,37 +344,32 @@ export default function Sala1({ onNavigate = () => {} }) {
           </div>
         </div>
 
-        {/* Room Navigation Footer */}
-        <div className="mt-12 pt-6 border-t border-white/[0.08] flex items-center justify-between text-xs">
+        {/* Bottom Room Navigation */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '2.5rem' }}>
           <button
             onClick={() => {
               sound.playClick();
-              onNavigate('lobby');
-            }}
-            className="btn-secondary"
-          >
-            <ArrowLeft size={14} /> Volver al Lobby
-          </button>
-
-          <button
-            onClick={() => {
-              sound.playFanfare();
               onNavigate('sala2');
             }}
             className="btn-primary"
-            style={{ background: 'var(--accent-crimson)', color: '#FFF' }}
+            style={{
+              background: 'linear-gradient(135deg, #FF2A6D 0%, #FF6584 100%)',
+              boxShadow: '0 4px 20px rgba(255, 42, 109, 0.35)'
+            }}
           >
-            <span>Pabellón 02: Presentaciones & Gamificación</span>
-            <ArrowRight size={14} />
+            <span>Avanzar a Sala 2: Presentaciones & Gamificación</span>
+            <ArrowRight size={16} />
           </button>
         </div>
       </div>
 
-      {/* Exhibit Inspection Modal */}
-      <ExhibitModal
-        exhibit={selectedExhibit}
-        onClose={() => setSelectedExhibit(null)}
-      />
+      {/* Exhibit Detail Modal */}
+      {selectedExhibit && (
+        <ExhibitModal
+          exhibit={selectedExhibit}
+          onClose={() => setSelectedExhibit(null)}
+        />
+      )}
     </div>
   );
 }

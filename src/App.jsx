@@ -10,6 +10,7 @@ import Sala2 from './components/Sala2';
 import Sala3 from './components/Sala3';
 import Sala4 from './components/Sala4';
 import CertificadoModal from './components/CertificadoModal';
+import MuseumAmbientBackdrop from './components/ambient/MuseumAmbientBackdrop';
 
 export default function App() {
   const [currentRoom, setCurrentRoom] = useState('lobby');
@@ -60,7 +61,10 @@ export default function App() {
 
   return (
     <ClickSpark sparkCount={8} sparkSize={5} duration={400}>
-      <div className="relative min-h-screen bg-[#07090E] text-white flex flex-col font-body selection:bg-cyan-500 selection:text-black">
+      <div className="relative min-h-screen bg-deep text-white flex flex-col font-body">
+        {/* 2D Animated Museum Atmosphere Backdrop */}
+        <MuseumAmbientBackdrop />
+
         {/* Top Sticky Header */}
         <MuseumHeader
           currentRoomId={currentRoom}

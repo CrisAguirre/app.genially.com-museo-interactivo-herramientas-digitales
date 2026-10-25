@@ -22,55 +22,129 @@ export default function MuseumHeader({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#07090E]/85 border-b border-white/[0.08] px-4 py-3 transition-colors duration-300">
+    <header
+      style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        width: '100%',
+        backgroundColor: 'rgba(5, 7, 11, 0.88)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        padding: '0.75rem 1rem'
+      }}
+    >
       <div className="container flex items-center justify-between">
         {/* Museum Logo & Identity */}
         <div
-          className="flex items-center gap-2.5 cursor-pointer group"
           onClick={() => {
             sound.playClick();
             onNavigate('lobby');
           }}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-base text-black shadow-md shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+          <div
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, #00E5FF 0%, #0077FF 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '18px',
+              boxShadow: '0 0 15px rgba(0, 229, 255, 0.35)'
+            }}
+          >
             🏛️
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-xs tracking-wider uppercase text-white font-display">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 800,
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.05em',
+                  color: '#FFFFFF'
+                }}
+              >
                 MUSEO VIRTUAL
               </span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded font-mono font-bold bg-white/5 text-slate-400 border border-white/10">
+              <span
+                style={{
+                  fontSize: '10px',
+                  padding: '2px 6px',
+                  borderRadius: '4px',
+                  fontFamily: 'var(--font-mono)',
+                  fontWeight: 700,
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  color: 'var(--accent-cyan)',
+                  border: '1px solid rgba(0, 229, 255, 0.3)'
+                }}
+              >
                 GENIALLY RED
               </span>
             </div>
-            <div className="text-[11px] text-slate-400">
+            <div style={{ fontSize: '11px', color: '#94A3B8' }}>
               Pensamiento Lógico & Resolución de Problemas
             </div>
           </div>
         </div>
 
         {/* Current Location Badge */}
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.35rem 0.85rem',
+            borderRadius: '9999px',
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            fontSize: '12px'
+          }}
+        >
           <span
-            className="w-2 h-2 rounded-full"
-            style={{ backgroundColor: currentRoom.color }}
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: currentRoom.color || 'var(--accent-cyan)',
+              boxShadow: `0 0 8px ${currentRoom.color || 'var(--accent-cyan)'}`
+            }}
           />
-          <span className="text-slate-400">Ubicación:</span>
-          <span className="font-semibold text-white">
-            {currentRoom.number === '0' ? 'Lobby Principal' : `Pabellón ${currentRoom.number}: ${currentRoom.title}`}
+          <span style={{ color: '#94A3B8' }}>Ubicación:</span>
+          <span style={{ fontWeight: 600, color: '#FFFFFF' }}>
+            {currentRoom.number === '0'
+              ? 'Lobby Principal'
+              : `Pabellón 0${currentRoom.number}: ${currentRoom.title}`}
           </span>
         </div>
 
         {/* Header Actions */}
-        <div className="flex items-center gap-2">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           {quizCompleted && (
             <button
               onClick={() => {
                 sound.playFanfare();
                 onOpenCertificate();
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-400 text-black hover:bg-amber-300 transition-all shadow-sm"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                padding: '0.45rem 0.9rem',
+                borderRadius: '8px',
+                fontSize: '12px',
+                fontWeight: 700,
+                backgroundColor: 'var(--accent-amber)',
+                color: '#000000',
+                border: 'none',
+                cursor: 'pointer',
+                boxShadow: '0 0 15px rgba(255, 184, 0, 0.4)'
+              }}
             >
               <Award size={14} />
               <span>Certificado</span>
@@ -80,9 +154,20 @@ export default function MuseumHeader({
           <button
             onClick={handleToggleSound}
             aria-label={isMuted ? 'Activar sonido' : 'Silenciar sonido'}
-            className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/[0.04] border border-white/[0.08] text-slate-400 hover:text-white transition-colors"
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              color: isMuted ? '#64748B' : 'var(--accent-cyan)',
+              cursor: 'pointer'
+            }}
           >
-            {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
           </button>
         </div>
       </div>

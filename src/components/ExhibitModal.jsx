@@ -6,18 +6,19 @@ export default function ExhibitModal({ exhibit, onClose }) {
   if (!exhibit) return null;
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-overlay" onClick={onClose}>
       <div
-        className="modal-content p-6 sm:p-8"
+        className="modal-content-box p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between pb-4 border-b border-white/10">
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', paddingBottom: '1rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
           <div>
-            <span className="meta-pill text-cyan-400 border-cyan-500/30 mb-2">
-              {exhibit.formato}
-            </span>
-            <h3 className="text-xl sm:text-2xl font-bold text-white font-display mt-1">
+            <div className="meta-pill mb-2">
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-cyan)' }} />
+              <span>{exhibit.formato || 'Recurso Educativo Digital'}</span>
+            </div>
+            <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#FFFFFF', marginTop: '4px', lineHeight: 1.3 }}>
               {exhibit.title}
             </h3>
           </div>
@@ -26,44 +27,63 @@ export default function ExhibitModal({ exhibit, onClose }) {
               sound.playClick();
               onClose();
             }}
-            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-white/70 hover:text-white flex items-center justify-center transition-colors"
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              color: '#94A3B8',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer'
+            }}
           >
             <X size={16} />
           </button>
         </div>
 
         {/* Content Body */}
-        <div className="my-6 space-y-5 text-sm text-white/80 leading-relaxed font-body">
+        <div style={{ margin: '1.5rem 0', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div>
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white/50 mb-1.5">
-              Descripción del Recurso
+            <h4 style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 800, textTransform: 'uppercase', color: '#94A3B8', letterSpacing: '0.08em', marginBottom: '6px' }}>
+              Descripción Técnica y Contenido Didáctico
             </h4>
-            <p className="text-white/90">
-              {exhibit.descripcion}
+            <p style={{ fontSize: '0.9rem', color: '#CBD5E1', lineHeight: 1.6 }}>
+              {exhibit.descripcion || exhibit.description}
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-300 flex items-center gap-1.5 mb-1.5">
+          <div
+            style={{
+              padding: '1.25rem',
+              borderRadius: '14px',
+              backgroundColor: 'rgba(0, 229, 255, 0.06)',
+              border: '1px solid rgba(0, 229, 255, 0.2)'
+            }}
+          >
+            <h4 style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 800, textTransform: 'uppercase', color: 'var(--accent-cyan)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
               <CheckCircle2 size={14} />
-              Aporte Didáctico al Pensamiento Lógico
+              Aporte al Pensamiento Lógico & Resolución de Problemas
             </h4>
-            <p className="text-xs sm:text-sm text-white/80">
-              {exhibit.aportePedagogico}
+            <p style={{ fontSize: '0.85rem', color: '#E2E8F0', lineHeight: 1.55 }}>
+              {exhibit.aportePedagogico || 'Fortalece la capacidad deductiva y la estructuración del razonamiento.'}
             </p>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="pt-4 border-t border-white/10 flex justify-end">
+        <div style={{ paddingTop: '1rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)', display: 'flex', justifyContent: 'flex-end' }}>
           <button
             onClick={() => {
               sound.playClick();
               onClose();
             }}
-            className="btn-secondary text-xs"
+            className="btn-secondary"
+            style={{ fontSize: '12px', padding: '0.5rem 1.25rem' }}
           >
-            Cerrar Exhibición
+            Cerrar Ficha del Recurso
           </button>
         </div>
       </div>
