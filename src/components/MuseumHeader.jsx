@@ -173,6 +173,32 @@ export default function MuseumHeader({
           </button>
         </div>
       </div>
+
+      {/* Institutional Info Strip */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.5rem',
+          flexWrap: 'wrap',
+          padding: '0.3rem 1rem 0.2rem',
+          fontSize: '10px',
+          fontFamily: 'var(--font-mono)',
+          color: '#64748B',
+          borderTop: '1px solid rgba(255, 255, 255, 0.04)'
+        }}
+      >
+        <span style={{ color: '#94A3B8', fontWeight: 600 }}>👩‍🎓 {INSTITUCION.estudiante}</span>
+        <span style={{ opacity: 0.4 }}>|</span>
+        <span>📍 {INSTITUCION.nombre}, {INSTITUCION.ubicacion}</span>
+        <span style={{ opacity: 0.4 }}>|</span>
+        <span>{INSTITUCION.grado}</span>
+        <span style={{ opacity: 0.4 }}>|</span>
+        <span>📚 {INSTITUCION.modulo}</span>
+        <span style={{ opacity: 0.4 }}>|</span>
+        <span>👩‍🏫 {INSTITUCION.docente}</span>
+      </div>
     </header>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, Compass, FileText, CheckCircle2, Layers, Sparkles } from 'lucide-react';
 import { sound } from '../utils/audio';
-import { FICHA_TECNICA } from '../data/museumData';
+import { FICHA_TECNICA, INSTITUCION } from '../data/museumData';
 import MuseumRotundaMap2D from './ambient/MuseumRotundaMap2D';
 
 export default function Lobby({
@@ -60,7 +60,7 @@ export default function Lobby({
         {/* Curated Pre-title Badge */}
         <div className="meta-pill mb-4">
           <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--accent-cyan)' }} />
-          <span>LIENZO VIRTUAL GENIALLY • POBLACIÓN: GRADOS 6.° A 11.°</span>
+          <span>MUSEO INTERACTIVO • {INSTITUCION.grado.toUpperCase()} • {INSTITUCION.nombre.toUpperCase()}, TOLIMA</span>
         </div>
 
         {/* Hero Title */}
@@ -100,6 +100,62 @@ export default function Lobby({
         >
           Una experiencia museística virtual interactiva estructurada en 4 pabellones pedagógicos, 20 Recursos Educativos Digitales y estaciones didácticas donde tú eres el protagonista.
         </p>
+
+        {/* Student & Professor Attribution */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem',
+            marginTop: '0.75rem',
+            fontSize: '0.8rem'
+          }}
+        >
+          <span
+            style={{
+              padding: '0.3rem 0.8rem',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(0, 229, 255, 0.08)',
+              border: '1px solid rgba(0, 229, 255, 0.2)',
+              color: 'var(--accent-cyan)',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 600,
+              fontSize: '11px'
+            }}
+          >
+            👩‍🎓 Estudiante: {INSTITUCION.estudiante}
+          </span>
+          <span
+            style={{
+              padding: '0.3rem 0.8rem',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(255, 184, 0, 0.08)',
+              border: '1px solid rgba(255, 184, 0, 0.2)',
+              color: 'var(--accent-amber)',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 600,
+              fontSize: '11px'
+            }}
+          >
+            👩‍🏫 {INSTITUCION.docente}
+          </span>
+          <span
+            style={{
+              padding: '0.3rem 0.8rem',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(0, 245, 160, 0.08)',
+              border: '1px solid rgba(0, 245, 160, 0.2)',
+              color: '#00F5A0',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 600,
+              fontSize: '11px'
+            }}
+          >
+            📚 Módulo: {INSTITUCION.modulo}
+          </span>
+        </div>
 
         {/* Hero Actions */}
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginTop: '1.75rem' }}>
@@ -262,7 +318,7 @@ export default function Lobby({
                   DOCUMENTO INSTITUCIONAL
                 </span>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#FFFFFF', marginTop: '2px' }}>
-                  {FICHA_TECNICA.titulo}
+                  Ficha Técnica del Museo Interactivo
                 </h3>
               </div>
               <button
@@ -284,8 +340,28 @@ export default function Lobby({
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.875rem', color: '#CBD5E1' }}>
               <div>
-                <strong style={{ color: '#FFFFFF' }}>Lienzo Virtual Empleado:</strong>
-                <p style={{ color: '#94A3B8', marginTop: '2px' }}>{FICHA_TECNICA.lienzo}</p>
+                <strong style={{ color: '#FFFFFF' }}>👩‍🎓 Estudiante:</strong>
+                <p style={{ color: 'var(--accent-cyan)', marginTop: '2px', fontWeight: 600 }}>{INSTITUCION.estudiante}</p>
+              </div>
+              <div>
+                <strong style={{ color: '#FFFFFF' }}>👩‍🏫 Docente:</strong>
+                <p style={{ color: 'var(--accent-amber)', marginTop: '2px', fontWeight: 600 }}>{INSTITUCION.docente}</p>
+              </div>
+              <div>
+                <strong style={{ color: '#FFFFFF' }}>📚 Módulo:</strong>
+                <p style={{ color: '#94A3B8', marginTop: '2px' }}>{INSTITUCION.modulo}</p>
+              </div>
+              <div>
+                <strong style={{ color: '#FFFFFF' }}>🏫 Institución:</strong>
+                <p style={{ color: '#94A3B8', marginTop: '2px' }}>{INSTITUCION.nombre}, {INSTITUCION.ubicacion} — {INSTITUCION.grado}</p>
+              </div>
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.75rem' }}>
+                <strong style={{ color: '#FFFFFF' }}>Tema Central:</strong>
+                <p style={{ color: '#94A3B8', marginTop: '2px' }}>{FICHA_TECNICA.temaCentral}</p>
+              </div>
+              <div>
+                <strong style={{ color: '#FFFFFF' }}>Plataforma Virtual:</strong>
+                <p style={{ color: '#94A3B8', marginTop: '2px' }}>{FICHA_TECNICA.plataforma}</p>
               </div>
               <div>
                 <strong style={{ color: '#FFFFFF' }}>Población Objetivo:</strong>
@@ -293,15 +369,15 @@ export default function Lobby({
               </div>
               <div>
                 <strong style={{ color: '#FFFFFF' }}>Objetivo Pedagógico Central:</strong>
-                <p style={{ color: '#94A3B8', marginTop: '2px' }}>{FICHA_TECNICA.objetivo}</p>
+                <p style={{ color: '#94A3B8', marginTop: '2px' }}>{FICHA_TECNICA.objetivoPedagogico}</p>
               </div>
               <div>
                 <strong style={{ color: '#FFFFFF' }}>Estructura de la Exposición:</strong>
                 <p style={{ color: '#94A3B8', marginTop: '2px' }}>{FICHA_TECNICA.estructura}</p>
               </div>
               <div>
-                <strong style={{ color: '#FFFFFF' }}>Criterios de Evaluación y Rúbrica:</strong>
-                <p style={{ color: '#94A3B8', marginTop: '2px' }}>{FICHA_TECNICA.rubrica}</p>
+                <strong style={{ color: '#FFFFFF' }}>Enfoque Pedagógico:</strong>
+                <p style={{ color: '#94A3B8', marginTop: '2px' }}>{FICHA_TECNICA.enfoque}</p>
               </div>
             </div>
 

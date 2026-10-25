@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Award, CheckCircle, Printer, X, Sparkles } from 'lucide-react';
 import { sound } from '../utils/audio';
+import { INSTITUCION } from '../data/museumData';
 
 export default function CertificadoModal({
   isOpen = false,
   onClose = () => {},
   score = 5,
   badge = null,
-  visitorName = 'Explorador del Pensamiento Lógico'
+  visitorName = 'Juana Yasiris Valoyes Serna'
 }) {
   const [name, setName] = useState(visitorName);
   const currentDate = new Date().toLocaleDateString('es-ES', {
@@ -74,7 +75,7 @@ export default function CertificadoModal({
           {/* Header Decors */}
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'var(--font-mono)', color: 'rgba(255, 184, 0, 0.5)', marginBottom: '1rem' }}>
             <span>✦ PENSAMIENTO LÓGICO & RESOLUCIÓN DE PROBLEMAS ✦</span>
-            <span>✦ LIENZO VIRTUAL GENIALLY ✦</span>
+            <span>✦ {INSTITUCION.nombre.toUpperCase()}, TOLIMA ✦</span>
           </div>
 
           <div
@@ -155,7 +156,7 @@ export default function CertificadoModal({
             <span style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontSize: '12px', fontWeight: 800, color: '#FFB800' }}>{badge?.title || 'Explorador Lógico'}</div>
-              <div style={{ fontSize: '10px', color: '#94A3B8' }}>{badge?.rank || 'Grados 6.° a 11.°'}</div>
+              <div style={{ fontSize: '10px', color: '#94A3B8' }}>{INSTITUCION.grado} — {INSTITUCION.nombre}</div>
             </div>
           </div>
 
@@ -177,7 +178,26 @@ export default function CertificadoModal({
             </div>
             <div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#64748B' }}>CÓDIGO DE VALIDACIÓN</div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, color: '#FFB800' }}>RED-LOGIC-GENIALLY-2026</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, color: '#FFB800' }}>RED-LOGIC-PLANADAS-2026</div>
+            </div>
+          </div>
+
+          {/* Professor Signature */}
+          <div
+            style={{
+              marginTop: '1rem',
+              paddingTop: '0.75rem',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.15rem'
+            }}
+          >
+            <div style={{ width: '180px', borderBottom: '1px solid rgba(255, 184, 0, 0.5)', marginBottom: '0.3rem' }} />
+            <div style={{ fontSize: '11px', fontWeight: 700, color: '#FFFFFF' }}>{INSTITUCION.docente}</div>
+            <div style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: '#64748B' }}>
+              {INSTITUCION.modulo} — {INSTITUCION.nombre}, Tolima
             </div>
           </div>
         </div>
