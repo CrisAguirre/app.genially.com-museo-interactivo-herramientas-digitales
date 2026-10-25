@@ -1,38 +1,37 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, Network, CheckCircle2, AlertCircle, RefreshCw, Sparkles, Layers, MoveUp, MoveDown, Check } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, RefreshCw, Eye, CheckCircle2, AlertCircle, MoveUp, MoveDown } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '../utils/audio';
 import { SALA1_DATA } from '../data/museumData';
 import BackgroundGalaxy from './reactbits/BackgroundGalaxy';
-import DecryptedText from './reactbits/DecryptedText';
-import ShinyText from './reactbits/ShinyText';
-import SpotlightCard from './reactbits/SpotlightCard';
+import ExhibitModal from './ExhibitModal';
 
 export default function Sala1({ onNavigate = () => {} }) {
-  // Activity state for RED #5: Clasificar pasos de un algoritmo desordenado
+  const [selectedExhibit, setSelectedExhibit] = useState(null);
+
+  // RED #5 Activity State: Clasificar pasos de un algoritmo
   const [steps, setSteps] = useState(SALA1_DATA.algoritmoStepsDefault);
-  const [isAlgorithmVerified, setIsAlgorithmVerified] = useState(false);
-  const [isCorrectOrder, setIsCorrectOrder] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
 
   const moveStep = (index, direction) => {
     sound.playClick();
     const newSteps = [...steps];
-    const targetIndex = index + direction;
-    if (targetIndex < 0 || targetIndex >= newSteps.length) return;
+    const target = index + direction;
+    if (target < 0 || target >= newSteps.length) return;
     const temp = newSteps[index];
-    newSteps[index] = newSteps[targetIndex];
-    newSteps[targetIndex] = temp;
+    newSteps[index] = newSteps[target];
+    newSteps[target] = temp;
     setSteps(newSteps);
-    setIsAlgorithmVerified(false);
+    setIsVerified(false);
   };
 
-  const verifyAlgorithm = () => {
-    // Check if correct order 0, 1, 2, 3, 4
-    const correct = steps.every((s, idx) => s.correctIndex === idx);
-    setIsAlgorithmVerified(true);
-    setIsCorrectOrder(correct);
+  const handleVerify = () => {
+    const ok = steps.every((s, idx) => s.correctIndex === idx);
+    setIsVerified(true);
+    setIsCorrect(ok);
 
-    if (correct) {
+    if (ok) {
       sound.playFanfare();
       try {
         confetti({
@@ -46,244 +45,226 @@ export default function Sala1({ onNavigate = () => {} }) {
     }
   };
 
-  const resetAlgorithm = () => {
+  const handleReset = () => {
     sound.playClick();
     setSteps(SALA1_DATA.algoritmoStepsDefault);
-    setIsAlgorithmVerified(false);
-    setIsCorrectOrder(false);
+    setIsVerified(false);
+    setIsCorrect(false);
   };
 
+  const exhibitIcons = ['🧠', '🔀', '🌿', '💬'];
+
   return (
-    <div className="relative min-h-[calc(100vh-65px)] pb-32 pt-8">
-      {/* Background Galaxy with Cyan Hue */}
-      <BackgroundGalaxy speed={0.9} starCount={200} nebulaColor="rgba(0, 196, 204, 0.2)" />
+    <div className="relative min-h-[calc(100vh-70px)] pb-28 pt-8">
+      {/* Subtle Background */}
+      <BackgroundGalaxy speed={0.4} starCount={120} nebulaColor="rgba(0, 210, 211, 0.08)" />
 
       <div className="container relative z-10">
-        {/* Navigation Breadcrumb */}
-        <div className="flex items-center justify-between mb-6">
+        {/* Top Room Navigation Bar */}
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/[0.08]">
           <button
             onClick={() => {
               sound.playClick();
               onNavigate('lobby');
             }}
-            className="flex items-center gap-1.5 text-xs font-semibold text-white/70 hover:text-white px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+            className="btn-secondary text-xs"
           >
             <ArrowLeft size={14} /> Volver al Lobby
           </button>
 
-          <div className="badge-pill border-cyan-500/40 bg-cyan-500/10 text-cyan-300">
-            Sala 1 • Organización Visual & Algoritmos
+          <div className="text-right">
+            <span className="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider block">
+              Pabellón 01 • Padlet / Canva / MindMeister
+            </span>
+            <span className="text-xs text-slate-400">
+              Organizadores Gráficos y Algoritmos
+            </span>
           </div>
         </div>
 
-        {/* Room Header */}
-        <div className="text-center max-w-3xl mx-auto">
-          <div className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest mb-1">
-            HERRAMIENTAS: {SALA1_DATA.herramientas}
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-black text-white font-display uppercase">
-            ORGANIZADORES{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-sky-300">
-              GRÁFICOS
-            </span>
+        {/* Room Header & Concept */}
+        <div className="max-w-2xl mb-10 text-left">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
+            ORGANIZADORES GRÁFICOS
           </h1>
-          <p className="mt-2 text-sm sm:text-base text-white/80">
-            Estructuración visual del pensamiento lógico:{' '}
-            <ShinyText text="Deducción, Inducción y Algoritmos Cotidianos" speed={3} className="font-bold text-cyan-300" />
+          <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+            Representación visual del pensamiento lógico: razonamiento deductivo, inductivo y modelado algorítmico mediante mapas conceptuales, diagramas de flujo y murales colaborativos.
           </p>
         </div>
 
-        {/* Summary Info Banner */}
-        <div className="glass-panel p-5 my-8 border-cyan-500/20 bg-cyan-500/5">
-          <div className="flex flex-col md:flex-row items-center gap-4 text-xs">
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-xl shrink-0 border border-cyan-500/30">
-              📊
-            </div>
-            <div className="text-left flex-1">
-              <span className="font-bold text-white text-sm block">Aporte Tecnopedagógico de los Organizadores Gráficos:</span>
-              <p className="text-white/70 mt-0.5 leading-relaxed">
-                Herramientas como Canva, MindMeister y Padlet permiten materializar esquemas cognitivos, transformando conceptos lógicos abstractos en mapas visuales comprensibles y algoritmos secuenciales de resolución de problemas.
-              </p>
-            </div>
+        {/* 4 Exhibit Pedestals (RED 1 to 4) */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-bold text-slate-200 uppercase tracking-wider font-mono text-xs">
+              Colección de Recursos Educativos Digitales (RED 1 al 4)
+            </h2>
+            <span className="text-xs text-slate-500 font-mono">
+              Haz clic en cualquier exhibición para examinar detalles
+            </span>
           </div>
-        </div>
 
-        {/* REDs Grid: RED 1, RED 2, RED 3, RED 4 */}
-        <div className="my-10">
-          <h2 className="text-2xl font-black text-white font-display mb-6 flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-cyan-400 animate-pulse" />
-            Recursos Educativos Digitales (RED) de la Sala 1
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {SALA1_DATA.redItems.slice(0, 4).map((red) => (
-              <SpotlightCard
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {SALA1_DATA.redItems.slice(0, 4).map((red, idx) => (
+              <div
                 key={red.id}
-                spotlightColor="rgba(0, 196, 204, 0.3)"
-                borderColor="rgba(0, 196, 204, 0.25)"
-                className="p-6 bg-gradient-to-br from-[#0d1e24]/90 to-[#071115]/95 flex flex-col justify-between"
+                onClick={() => {
+                  sound.playClick();
+                  setSelectedExhibit(red);
+                }}
+                className="exhibit-card group"
+                style={{ '--card-accent': 'var(--accent-cyan)' }}
               >
                 <div>
-                  <span className="badge-pill border-cyan-500/40 bg-cyan-500/10 text-cyan-300 text-[10px] mb-3">
-                    {red.formato}
+                  <div className="text-2xl mb-3">{exhibitIcons[idx]}</div>
+                  <span className="text-[11px] font-mono text-cyan-400 block mb-1">
+                    RED 0{idx + 1}
                   </span>
-                  <h3 className="text-lg font-bold text-white font-display">
-                    {red.title}
+                  <h3 className="text-sm font-bold text-white font-display group-hover:text-cyan-300 transition-colors leading-snug">
+                    {red.title.replace(/^RED #\d+:\s*/, '')}
                   </h3>
-                  <p className="text-xs text-white/80 mt-2 leading-relaxed">
-                    {red.descripcion}
-                  </p>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-white/10 text-[11px] text-cyan-300/80 font-mono">
-                  ✦ {red.aportePedagogico}
+                <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
+                  <span className="text-[11px] truncate max-w-[130px]">{red.formato.split('(')[0]}</span>
+                  <span className="text-cyan-400 font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                    <Eye size={13} /> Ver
+                  </span>
                 </div>
-              </SpotlightCard>
+              </div>
             ))}
           </div>
         </div>
 
-        {/* =========================================================================
-            RED #5: ACTIVIDAD INTERACTIVA PARA EL VISITANTE
-            "Actividad: Clasificar pasos de un algoritmo desordenado"
-           ========================================================================= */}
-        <div className="my-12">
-          <SpotlightCard
-            spotlightColor="rgba(0, 196, 204, 0.4)"
-            borderColor="rgba(0, 196, 204, 0.5)"
-            className="p-6 sm:p-8 bg-gradient-to-b from-[#0e272a]/95 to-[#061517]/98"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/10 mb-6 gap-2">
-              <div>
-                <div className="badge-pill border-cyan-400/50 bg-cyan-400/20 text-cyan-200 text-xs font-mono font-bold mb-1">
-                  🎮 RED #5 • ACTIVIDAD INTERACTIVA
-                </div>
-                <h3 className="text-xl sm:text-2xl font-black text-white font-display">
-                  Clasificador de Pasos: Algoritmo de Verificación Crítica
-                </h3>
-                <p className="text-xs text-white/70 mt-1">
-                  Misión del visitante: Ordena los 5 pasos lógicos para "Detectar una noticia falsa antes de compartirla". Usa los botones ▲ y ▼ para mover cada bloque.
-                </p>
+        {/* Central Hands-On Station: RED #5 Activity */}
+        <div className="gallery-stage mt-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/[0.08] mb-6 gap-3">
+            <div>
+              <div className="meta-pill text-cyan-300 border-cyan-500/30 text-[11px] mb-1.5">
+                RED #5 • ACTIVIDAD INTERACTIVA DEL VISITANTE
               </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-white font-display">
+                Clasificador Algorítmico: Secuencia Lógica de Verificación
+              </h2>
+              <p className="text-xs text-slate-400 mt-1">
+                Ordena los 5 pasos del algoritmo para "Verificar una noticia dudosa antes de compartirla". Utiliza las flechas para reordenar la secuencia.
+              </p>
+            </div>
 
-              <button
-                onClick={resetAlgorithm}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors self-start sm:self-center"
+            <button
+              onClick={handleReset}
+              className="btn-secondary text-xs self-start sm:self-center"
+            >
+              <RefreshCw size={13} /> Reiniciar
+            </button>
+          </div>
+
+          {/* Clean Step Rows */}
+          <div className="space-y-2.5">
+            {steps.map((st, idx) => (
+              <div
+                key={st.id}
+                className={`p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 ${
+                  isVerified
+                    ? st.correctIndex === idx
+                      ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
+                      : 'bg-rose-500/10 border-rose-500/40 text-rose-200'
+                    : 'bg-surface border-subtle hover:border-medium'
+                }`}
               >
-                <RefreshCw size={13} /> Reiniciar
-              </button>
-            </div>
-
-            {/* Draggable/Movable Steps List */}
-            <div className="space-y-3">
-              {steps.map((st, idx) => (
-                <div
-                  key={st.id}
-                  className={`p-4 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 ${
-                    isAlgorithmVerified
-                      ? st.correctIndex === idx
-                        ? 'bg-emerald-500/20 border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
-                        : 'bg-rose-500/20 border-rose-500/60'
-                      : 'bg-white/5 border-white/10 hover:border-cyan-400/30'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center justify-center font-mono font-black text-sm shrink-0">
-                      {idx + 1}
-                    </span>
-                    <p className="text-xs sm:text-sm font-semibold text-white">
-                      {st.text}
-                    </p>
-                  </div>
-
-                  {/* Move Up/Down Controls */}
-                  <div className="flex items-center gap-1 shrink-0">
-                    <button
-                      type="button"
-                      disabled={idx === 0}
-                      onClick={() => moveStep(idx, -1)}
-                      className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-white transition-colors"
-                      title="Mover arriba"
-                    >
-                      <MoveUp size={15} />
-                    </button>
-                    <button
-                      type="button"
-                      disabled={idx === steps.length - 1}
-                      onClick={() => moveStep(idx, 1)}
-                      className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-white transition-colors"
-                      title="Mover abajo"
-                    >
-                      <MoveDown size={15} />
-                    </button>
-                  </div>
+                <div className="flex items-center gap-3">
+                  <span className="w-7 h-7 rounded-lg bg-white/[0.06] text-white flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                    {idx + 1}
+                  </span>
+                  <p className="text-xs sm:text-sm font-medium text-slate-200">
+                    {st.text}
+                  </p>
                 </div>
-              ))}
-            </div>
 
-            {/* Verification Button & Status */}
-            <div className="mt-7 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10">
-              <button
-                onClick={verifyAlgorithm}
-                className="btn-primary text-xs px-6 py-3 rounded-xl font-bold flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-teal-500 text-black shadow-lg shadow-cyan-400/30"
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    disabled={idx === 0}
+                    onClick={() => moveStep(idx, -1)}
+                    className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-20 text-white flex items-center justify-center transition-colors"
+                  >
+                    <MoveUp size={13} />
+                  </button>
+                  <button
+                    disabled={idx === steps.length - 1}
+                    onClick={() => moveStep(idx, 1)}
+                    className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-20 text-white flex items-center justify-center transition-colors"
+                  >
+                    <MoveDown size={13} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Validation Bar */}
+          <div className="mt-6 pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+            <button
+              onClick={handleVerify}
+              className="btn-primary text-xs"
+            >
+              <Check size={15} />
+              <span>Validar Secuencia Algorítmica</span>
+            </button>
+
+            {isVerified && (
+              <div
+                className={`text-xs font-semibold px-3.5 py-1.5 rounded-xl flex items-center gap-2 ${
+                  isCorrect
+                    ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                    : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
+                }`}
               >
-                <Check size={16} />
-                <span>Verificar Orden Lógico del Algoritmo</span>
-              </button>
-
-              {isAlgorithmVerified && (
-                <div
-                  className={`text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-2 animate-fadeIn ${
-                    isCorrectOrder
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                      : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
-                  }`}
-                >
-                  {isCorrectOrder ? (
-                    <>
-                      <CheckCircle2 size={16} />
-                      <span>¡Algoritmo perfecto! Has ordenado los 5 pasos con precisión lógica.</span>
-                    </>
-                  ) : (
-                    <>
-                      <AlertCircle size={16} />
-                      <span>Hay pasos fuera de secuencia. Revisa cuál acción debe anteceder a las demás.</span>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-          </SpotlightCard>
+                {isCorrect ? (
+                  <>
+                    <CheckCircle2 size={15} />
+                    <span>¡Secuencia correcta! El algoritmo cumple con la deducción lógica adecuada.</span>
+                  </>
+                ) : (
+                  <>
+                    <AlertCircle size={15} />
+                    <span>La secuencia presenta inconsistencias. Analiza qué acción es previa a las demás.</span>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Room Navigation Footer */}
-        <div className="mt-14 flex items-center justify-between pt-6 border-t border-white/10">
+        <div className="mt-12 pt-6 border-t border-white/[0.08] flex items-center justify-between text-xs">
           <button
             onClick={() => {
               sound.playClick();
               onNavigate('lobby');
             }}
-            className="flex items-center gap-2 text-xs font-bold text-white/70 hover:text-white"
+            className="btn-secondary"
           >
-            <ArrowLeft size={16} /> Volver al Lobby
+            <ArrowLeft size={14} /> Volver al Lobby
           </button>
 
           <button
-            id="go-sala-2-btn"
             onClick={() => {
               sound.playFanfare();
               onNavigate('sala2');
             }}
-            className="btn-primary text-xs px-6 py-3 rounded-xl flex items-center gap-2 shadow-lg shadow-rose-600/30"
-            style={{
-              background: 'linear-gradient(135deg, #E21B3C 0%, #ff4b67 100%)'
-            }}
+            className="btn-primary"
+            style={{ background: 'var(--accent-crimson)', color: '#FFF' }}
           >
-            <span>Ir a Sala 2: Presentaciones & Gamificación</span>
-            <ArrowRight size={16} />
+            <span>Pabellón 02: Presentaciones & Gamificación</span>
+            <ArrowRight size={14} />
           </button>
         </div>
       </div>
+
+      {/* Exhibit Inspection Modal */}
+      <ExhibitModal
+        exhibit={selectedExhibit}
+        onClose={() => setSelectedExhibit(null)}
+      />
     </div>
   );
 }

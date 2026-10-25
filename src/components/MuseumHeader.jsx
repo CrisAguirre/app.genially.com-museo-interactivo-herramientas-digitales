@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Volume2, VolumeX, Award } from 'lucide-react';
 import { sound } from '../utils/audio';
-import ShinyText from './reactbits/ShinyText';
-import DecryptedText from './reactbits/DecryptedText';
 
 export default function MuseumHeader({
   currentRoomId = 'lobby',
@@ -24,70 +22,67 @@ export default function MuseumHeader({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#090714]/85 border-b border-white/10 px-4 py-3 transition-colors duration-300">
+    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#07090E]/85 border-b border-white/[0.08] px-4 py-3 transition-colors duration-300">
       <div className="container flex items-center justify-between">
-        {/* Brand & Museum Title */}
+        {/* Museum Logo & Identity */}
         <div
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-2.5 cursor-pointer group"
           onClick={() => {
             sound.playClick();
             onNavigate('lobby');
           }}
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#46178F] to-[#00C4CC] flex items-center justify-center font-black text-xl text-white shadow-[0_0_15px_rgba(0,196,204,0.4)] group-hover:scale-105 transition-transform">
-            🧠
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-base text-black shadow-md shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+            🏛️
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-xs sm:text-sm tracking-wider uppercase text-white font-display">
-                MUSEO INTERACTIVO
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-xs tracking-wider uppercase text-white font-display">
+                MUSEO VIRTUAL
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono">
-                RED TIC
+              <span className="text-[10px] px-1.5 py-0.2 rounded font-mono font-bold bg-white/5 text-slate-400 border border-white/10">
+                GENIALLY RED
               </span>
             </div>
-            <div className="text-[11px] text-white/60 flex items-center gap-1">
-              <ShinyText text="Pensamiento Lógico & Resolución de Problemas" speed={3} />
+            <div className="text-[11px] text-slate-400">
+              Pensamiento Lógico & Resolución de Problemas
             </div>
           </div>
         </div>
 
-        {/* Current Room Badge */}
-        <div className="hidden md:flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs">
+        {/* Current Location Badge */}
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs">
           <span
-            className="w-2.5 h-2.5 rounded-full animate-pulse"
+            className="w-2 h-2 rounded-full"
             style={{ backgroundColor: currentRoom.color }}
           />
-          <span className="text-white/60">Ubicación:</span>
-          <span className="font-bold text-white flex items-center gap-1">
-            {currentRoom.number === '0' ? '🏛️ Lobby' : `Sala ${currentRoom.number}:`}
-            <DecryptedText text={currentRoom.title} speed={30} animateOn="hover" />
+          <span className="text-slate-400">Ubicación:</span>
+          <span className="font-semibold text-white">
+            {currentRoom.number === '0' ? 'Lobby Principal' : `Pabellón ${currentRoom.number}: ${currentRoom.title}`}
           </span>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex items-center gap-2.5">
-          {/* Certificate Action */}
+        {/* Header Actions */}
+        <div className="flex items-center gap-2">
           {quizCompleted && (
             <button
               onClick={() => {
                 sound.playFanfare();
                 onOpenCertificate();
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40 hover:bg-amber-400/30 transition-all hover:scale-105"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-400 text-black hover:bg-amber-300 transition-all shadow-sm"
             >
-              <Award size={15} />
-              <span>Mi Certificado</span>
+              <Award size={14} />
+              <span>Certificado</span>
             </button>
           )}
 
-          {/* Sound Toggle */}
           <button
             onClick={handleToggleSound}
             aria-label={isMuted ? 'Activar sonido' : 'Silenciar sonido'}
-            className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+            className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/[0.04] border border-white/[0.08] text-slate-400 hover:text-white transition-colors"
           >
-            {isMuted ? <VolumeX size={17} /> : <Volume2 size={17} />}
+            {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
           </button>
         </div>
       </div>

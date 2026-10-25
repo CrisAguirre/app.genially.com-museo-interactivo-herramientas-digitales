@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { sound } from '../../utils/audio';
 
 export default function Dock({
@@ -12,7 +12,7 @@ export default function Dock({
   return (
     <nav
       aria-label="Navegación de Salas del Museo"
-      className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#120F1D]/85 backdrop-blur-xl border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.6)] ${className}`}
+      className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 px-3 py-2 rounded-2xl bg-[#0B0E17]/90 backdrop-blur-2xl border border-white/10 shadow-[0_16px_40px_rgba(0,0,0,0.75)] ${className}`}
     >
       {items.map((item, idx) => {
         const isActive = activeId === item.id;
@@ -21,8 +21,8 @@ export default function Dock({
           hoveredIdx !== null && Math.abs(hoveredIdx - idx) === 1;
 
         let scale = 1;
-        if (isHovered) scale = 1.35;
-        else if (isNeighbor) scale = 1.15;
+        if (isHovered) scale = 1.18;
+        else if (isNeighbor) scale = 1.08;
 
         return (
           <button
@@ -37,23 +37,24 @@ export default function Dock({
               setHoveredIdx(idx);
             }}
             onMouseLeave={() => setHoveredIdx(null)}
-            className="group relative flex flex-col items-center justify-center transition-all duration-200 focus:outline-none"
+            className="group relative flex flex-col items-center justify-center transition-transform duration-200 focus:outline-none"
             style={{
-              transform: `scale(${scale}) translateY(${isHovered ? '-8px' : '0px'})`,
+              transform: `scale(${scale}) translateY(${isHovered ? '-4px' : '0px'})`,
               transformOrigin: 'bottom center'
             }}
           >
             {/* Tooltip */}
             <div
-              className={`pointer-events-none absolute -top-10 px-2.5 py-1 rounded-md text-[11px] font-semibold tracking-wide whitespace-nowrap transition-all duration-150 ${
+              className={`pointer-events-none absolute -top-9 px-2.5 py-1 rounded-md text-[11px] font-semibold tracking-wide whitespace-nowrap transition-all duration-150 ${
                 isHovered
                   ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-2'
+                  : 'opacity-0 translate-y-1'
               }`}
               style={{
-                backgroundColor: item.color || '#46178F',
-                color: '#FFFFFF',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.4)'
+                backgroundColor: '#1E293B',
+                color: '#F8FAFC',
+                border: '1px solid rgba(255,255,255,0.15)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
               }}
             >
               {item.title}
@@ -61,25 +62,20 @@ export default function Dock({
 
             {/* Icon Container */}
             <div
-              className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 border ${
+              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 border text-xs font-mono font-bold ${
                 isActive
-                  ? 'border-white ring-2 ring-white/50 shadow-lg'
-                  : 'border-white/10 hover:border-white/30'
+                  ? 'border-white/80 bg-white/15 text-white shadow-sm'
+                  : 'border-transparent bg-white/[0.04] text-slate-400 hover:text-white hover:bg-white/[0.08]'
               }`}
-              style={{
-                backgroundColor: isActive ? item.color : 'rgba(255,255,255,0.06)',
-                color: '#FFFFFF'
-              }}
             >
-              <span className="text-base font-bold">{item.number === '0' ? '🏛️' : `S${item.number}`}</span>
+              {item.number === '0' ? '🏛️' : `P${item.number}`}
             </div>
 
             {/* Active Dot */}
             <div
-              className={`w-1.5 h-1.5 mt-1 rounded-full transition-all duration-200 ${
-                isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
+              className={`w-1 h-1 mt-1 rounded-full transition-all duration-200 ${
+                isActive ? 'opacity-100 bg-cyan-400' : 'opacity-0'
               }`}
-              style={{ backgroundColor: item.color }}
             />
           </button>
         );

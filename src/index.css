@@ -1,41 +1,41 @@
 /* ==========================================================================
-   MUSEO INTERACTIVO KAHOOT - DESIGN SYSTEM & VISUAL EXCELLENCE
+   MUSEO VIRTUAL DE PENSAMIENTO LÓGICO & RESOLUCIÓN DE PROBLEMAS
+   Design System: Modern Architectural Virtual Gallery
+   Clean, Professional, Spatial & High-Contrast
    ========================================================================== */
 
 :root {
-  /* Brand Palettes - Kahoot Iconic Colors */
-  --kahoot-purple: #46178F;
-  --kahoot-purple-light: #672bc4;
-  --kahoot-purple-dark: #2a0b5a;
-  
-  --kahoot-red: #E21B3C;
-  --kahoot-red-glow: rgba(226, 27, 60, 0.45);
-  
-  --kahoot-blue: #1368CE;
-  --kahoot-blue-glow: rgba(19, 104, 206, 0.45);
-  
-  --kahoot-yellow: #D89E00;
-  --kahoot-yellow-glow: rgba(216, 158, 0, 0.45);
-  
-  --kahoot-green: #26890C;
-  --kahoot-green-glow: rgba(38, 137, 12, 0.45);
+  /* Architectural Palette */
+  --bg-deep: #07090E;
+  --bg-surface: #0E121A;
+  --bg-surface-elevated: #151A24;
+  --bg-surface-hover: #1C2230;
 
-  /* Deep Dark Space Mode */
-  --bg-main: #090714;
-  --bg-card: rgba(22, 17, 39, 0.75);
-  --bg-card-hover: rgba(32, 25, 56, 0.85);
-  --bg-glass: rgba(255, 255, 255, 0.04);
-  --border-glass: rgba(255, 255, 255, 0.1);
-  --border-glass-hover: rgba(255, 255, 255, 0.25);
+  /* Accent Colors (Refined & Vibrant) */
+  --accent-cyan: #00D2D3;
+  --accent-cyan-glow: rgba(0, 210, 211, 0.25);
+  --accent-crimson: #FF3366;
+  --accent-crimson-glow: rgba(255, 51, 102, 0.25);
+  --accent-blue: #2E86DE;
+  --accent-blue-glow: rgba(46, 134, 222, 0.25);
+  --accent-emerald: #10B981;
+  --accent-emerald-glow: rgba(16, 185, 129, 0.25);
+  --accent-gold: #F59E0B;
+  --accent-gold-glow: rgba(245, 158, 11, 0.25);
+  --accent-purple: #8B5CF6;
+
+  /* Borders & Glass */
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-bright: rgba(255, 255, 255, 0.28);
+  --glass-bg: rgba(14, 18, 26, 0.75);
 
   /* Typography */
-  --text-primary: #FFFFFF;
-  --text-secondary: #B6B2CE;
-  --text-muted: #797499;
-
-  /* Font Families */
-  --font-display: 'Bricolage Grotesque', 'Outfit', sans-serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --font-display: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
@@ -46,203 +46,210 @@
 }
 
 html, body {
-  background-color: var(--bg-main);
+  background-color: var(--bg-deep);
   color: var(--text-primary);
   font-family: var(--font-body);
-  overflow-x: hidden;
-  min-height: 100vh;
+  font-size: 15px;
   line-height: 1.6;
-  scroll-behavior: smooth;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom modern scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #090714;
+  background: var(--bg-deep);
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #2a2245;
-  border-radius: 9999px;
-  border: 2px solid #090714;
+  background: #1E293B;
+  border-radius: 999px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--kahoot-purple-light);
+  background: #334155;
 }
 
-/* Typography Utility Classes */
-h1, h2, h3, h4, h5, h6 {
+/* Typography Hierarchy */
+h1, h2, h3, h4 {
   font-family: var(--font-display);
-  letter-spacing: -0.025em;
-  line-height: 1.2;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-.font-display {
-  font-family: var(--font-display);
+.font-display { font-family: var(--font-display); }
+.font-body { font-family: var(--font-body); }
+.font-mono { font-family: var(--font-mono); }
+
+/* Architectural Containers */
+.container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
-.font-body {
-  font-family: var(--font-body);
+/* Gallery Room Stage */
+.gallery-stage {
+  position: relative;
+  border-radius: 24px;
+  background: radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.3) 0%, rgba(10, 13, 20, 0.8) 100%);
+  border: 1px solid var(--border-subtle);
+  padding: 2.5rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
-.font-mono {
-  font-family: var(--font-mono);
+/* Exhibit Showcase Pedestal Card */
+.exhibit-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 1.5rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Glassmorphism Classes */
-.glass-panel {
-  background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-glass);
-  border-radius: 20px;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.exhibit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  transition: background 0.25s ease;
 }
 
-.glass-panel:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-glass-hover);
+.exhibit-card:hover {
+  transform: translateY(-3px);
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-medium);
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6);
 }
 
-.glass-card-kahoot {
-  background: linear-gradient(145deg, rgba(30, 23, 54, 0.6) 0%, rgba(14, 10, 28, 0.85) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+.exhibit-card:hover::before {
+  background: var(--card-accent, var(--accent-cyan));
 }
 
-.glass-card-kahoot:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
-}
-
-/* Button & Interactive Element Presets */
+/* Clean Button Styles */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.85rem 1.75rem;
-  font-weight: 700;
-  font-size: 0.95rem;
-  border-radius: 14px;
+  gap: 0.6rem;
+  padding: 0.75rem 1.6rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
-  background: linear-gradient(135deg, var(--kahoot-purple) 0%, var(--kahoot-purple-light) 100%);
-  color: #FFFFFF;
-  box-shadow: 0 8px 24px -6px rgba(103, 43, 196, 0.5);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: var(--accent-cyan);
+  color: #000;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px -4px var(--accent-cyan-glow);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 12px 30px -6px rgba(103, 43, 196, 0.75);
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 8px 24px -4px var(--accent-cyan-glow);
 }
 
 .btn-primary:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0);
 }
 
-/* Badge pill */
-.badge-pill {
+.btn-secondary {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 1px solid var(--border-medium);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #FFFFFF;
+  border-color: var(--border-bright);
 }
 
-/* Keyframe animations */
-@keyframes shine {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+/* Elegant Metadata Pill */
+.meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
 }
 
-@keyframes pulse-slow {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.9;
-  }
-  50% {
-    transform: scale(1.04);
-    opacity: 1;
-  }
+/* Modal Dialog */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 3s ease-in-out infinite;
-}
-
-/* Kahoot Shape Badges */
-.shape-triangle {
-  color: var(--kahoot-red);
-  text-shadow: 0 0 16px var(--kahoot-red-glow);
-}
-
-.shape-diamond {
-  color: var(--kahoot-blue);
-  text-shadow: 0 0 16px var(--kahoot-blue-glow);
-}
-
-.shape-circle {
-  color: var(--kahoot-yellow);
-  text-shadow: 0 0 16px var(--kahoot-yellow-glow);
-}
-
-.shape-square {
-  color: var(--kahoot-green);
-  text-shadow: 0 0 16px var(--kahoot-green-glow);
-}
-
-/* Layout Utilities (Vanilla Flex & Grid) */
-.container {
+.modal-content {
+  background: #0F131C;
+  border: 1px solid var(--border-medium);
+  border-radius: 20px;
   width: 100%;
-  max-width: 1240px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  max-width: 640px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.8);
+  animation: modal-enter 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@keyframes modal-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Flex & Grid Utilities */
 .flex { display: flex; }
 .inline-flex { display: inline-flex; }
 .flex-col { flex-direction: column; }
 .items-center { align-items: center; }
 .items-start { align-items: flex-start; }
-.justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
 .justify-end { justify-content: flex-end; }
 .gap-1 { gap: 0.25rem; }
 .gap-2 { gap: 0.5rem; }
@@ -250,9 +257,8 @@ h1, h2, h3, h4, h5, h6 {
 .gap-4 { gap: 1rem; }
 .gap-6 { gap: 1.5rem; }
 .gap-8 { gap: 2rem; }
-.gap-10 { gap: 2.5rem; }
+.flex-1 { flex: 1; }
 .flex-wrap { flex-wrap: wrap; }
-.flex-1 { flex: 1 1 0%; }
 
 .grid { display: grid; }
 .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
@@ -260,15 +266,17 @@ h1, h2, h3, h4, h5, h6 {
 .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
-@media (max-width: 900px) {
+@media (max-width: 860px) {
   .grid-cols-3, .grid-cols-4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-
-@media (max-width: 640px) {
+@media (max-width: 600px) {
   .grid-cols-2, .grid-cols-3, .grid-cols-4 {
     grid-template-columns: 1fr;
+  }
+  .gallery-stage {
+    padding: 1.25rem;
   }
 }
 
@@ -281,41 +289,7 @@ h1, h2, h3, h4, h5, h6 {
 .z-30 { z-index: 30; }
 .z-40 { z-index: 40; }
 .z-50 { z-index: 50; }
-.pointer-events-none { pointer-events: none; }
-.select-none { user-select: none; }
-
-.w-full { width: 100%; }
-.h-full { height: 100%; }
-.min-h-screen { min-height: 100vh; }
 .text-center { text-align: center; }
 .text-left { text-align: left; }
-.rounded-xl { border-radius: 0.75rem; }
-.rounded-2xl { border-radius: 1rem; }
-.rounded-3xl { border-radius: 1.5rem; }
-.rounded-full { border-radius: 9999px; }
-
-/* Podium styling for Sala 3 / 4 */
-.podium-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  border-radius: 16px 16px 4px 4px;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.podium-gold {
-  background: linear-gradient(180deg, #FFD700 0%, #B8860B 100%);
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
-}
-
-.podium-silver {
-  background: linear-gradient(180deg, #E2E8F0 0%, #94A3B8 100%);
-  box-shadow: 0 0 24px rgba(226, 232, 240, 0.3);
-}
-
-.podium-bronze {
-  background: linear-gradient(180deg, #F97316 0%, #C2410C 100%);
-  box-shadow: 0 0 24px rgba(249, 115, 22, 0.3);
-}
+.w-full { width: 100%; }
+.h-full { height: 100%; }

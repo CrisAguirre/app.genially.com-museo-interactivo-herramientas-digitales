@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, Gamepad2, Key, Lock, Unlock, Sparkles, CheckCircle2, HelpCircle, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Lock, Unlock, Key, HelpCircle, CheckCircle2, AlertCircle, Eye, RefreshCw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '../utils/audio';
 import { SALA2_DATA } from '../data/museumData';
 import BackgroundParticles from './reactbits/BackgroundParticles';
-import DecryptedText from './reactbits/DecryptedText';
-import ShinyText from './reactbits/ShinyText';
-import SpotlightCard from './reactbits/SpotlightCard';
+import ExhibitModal from './ExhibitModal';
 
 export default function Sala2({ onNavigate = () => {} }) {
-  // Activity state for RED #10: Escape Room con 3 acertijos lógicos
+  const [selectedExhibit, setSelectedExhibit] = useState(null);
+
+  // RED #10 Activity State: Escape Room
   const [currentRiddleIdx, setCurrentRiddleIdx] = useState(0);
   const [userAnswer, setUserAnswer] = useState('');
   const [unlockedDoors, setUnlockedDoors] = useState([false, false, false]);
@@ -20,7 +20,7 @@ export default function Sala2({ onNavigate = () => {} }) {
   const riddles = SALA2_DATA.escapeRoomRiddles;
   const activeRiddle = riddles[currentRiddleIdx];
 
-  const handleAttemptUnlock = (e) => {
+  const handleUnlock = (e) => {
     e.preventDefault();
     if (!userAnswer.trim()) return;
 
@@ -32,7 +32,7 @@ export default function Sala2({ onNavigate = () => {} }) {
       const updated = [...unlockedDoors];
       updated[currentRiddleIdx] = true;
       setUnlockedDoors(updated);
-      setFeedback({ type: 'success', msg: `¡Candado ${currentRiddleIdx + 1} desbloqueado con éxito!` });
+      setFeedback({ type: 'success', msg: `¡Candado 0${currentRiddleIdx + 1} desbloqueado!` });
       setUserAnswer('');
       setShowClue(false);
 
@@ -42,7 +42,6 @@ export default function Sala2({ onNavigate = () => {} }) {
           setFeedback(null);
         }, 1200);
       } else {
-        // Complete escape room!
         setEscapeCompleted(true);
         sound.playFanfare();
         try {
@@ -55,7 +54,7 @@ export default function Sala2({ onNavigate = () => {} }) {
       }
     } else {
       sound.playIncorrect();
-      setFeedback({ type: 'error', msg: 'Combinación incorrecta. Revisa el razonamiento o usa la pista.' });
+      setFeedback({ type: 'error', msg: 'Combinación incorrecta. Revisa el enunciado o consulta la pista.' });
     }
   };
 
@@ -69,248 +68,237 @@ export default function Sala2({ onNavigate = () => {} }) {
     setShowClue(false);
   };
 
+  const exhibitIcons = ['🌀', '🌳', '👁️', '📐'];
+
   return (
-    <div className="relative min-h-[calc(100vh-65px)] pb-32 pt-8">
-      {/* Background Particles with Rose/Purple Ambience */}
-      <BackgroundParticles particleCount={85} particleColor="rgba(226, 27, 60, 0.7)" lineColor="rgba(226, 27, 60, 0.15)" />
+    <div className="relative min-h-[calc(100vh-70px)] pb-28 pt-8">
+      {/* Background Particles with Crimson Tint */}
+      <BackgroundParticles particleCount={60} particleColor="rgba(255, 51, 102, 0.4)" lineColor="rgba(255, 51, 102, 0.1)" />
 
       <div className="container relative z-10">
-        {/* Navigation Breadcrumb */}
-        <div className="flex items-center justify-between mb-6">
+        {/* Top Room Navigation Bar */}
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/[0.08]">
           <button
             onClick={() => {
               sound.playClick();
               onNavigate('sala1');
             }}
-            className="flex items-center gap-1.5 text-xs font-semibold text-white/70 hover:text-white px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+            className="btn-secondary text-xs"
           >
-            <ArrowLeft size={14} /> Sala 1: Organizadores Gráficos
+            <ArrowLeft size={14} /> Pabellón 01: Organizadores Gráficos
           </button>
 
-          <div className="badge-pill border-rose-500/40 bg-rose-500/10 text-rose-300">
-            Sala 2 • Gamificación & Dilemas
+          <div className="text-right">
+            <span className="text-[11px] font-mono text-rose-400 font-bold uppercase tracking-wider block">
+              Pabellón 02 • Genially / Prezi / SlideShare
+            </span>
+            <span className="text-xs text-slate-400">
+              Presentaciones & Gamificación
+            </span>
           </div>
         </div>
 
-        {/* Room Header */}
-        <div className="text-center max-w-3xl mx-auto">
-          <div className="text-xs font-mono font-bold text-rose-400 uppercase tracking-widest mb-1">
-            HERRAMIENTAS: {SALA2_DATA.herramientas}
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-black text-white font-display uppercase">
-            PRESENTACIONES Y{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-400 to-amber-300">
-              GAMIFICACIÓN
-            </span>
+        {/* Room Header & Concept */}
+        <div className="max-w-2xl mb-10 text-left">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
+            PRESENTACIONES Y GAMIFICACIÓN
           </h1>
-          <p className="mt-2 text-sm sm:text-base text-white/80">
-            Narrativas lúdicas, paradojas y metodologías de resolución:{' '}
-            <ShinyText text="Método Pólya & Escape Rooms" speed={3} className="font-bold text-rose-300" />
+          <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+            Inmersión lúdica y narrativa para conceptos lógicos complejos: paradojas de la verdad, árboles de decisión, el método Pólya y resolución cooperativa de acertijos.
           </p>
         </div>
 
-        {/* Pedagogical Concept Card */}
-        <div className="glass-panel p-5 my-8 border-rose-500/20 bg-rose-500/5">
-          <div className="flex flex-col md:flex-row items-center gap-4 text-xs">
-            <div className="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-300 flex items-center justify-center text-xl shrink-0 border border-rose-500/30">
-              🎲
-            </div>
-            <div className="text-left flex-1">
-              <span className="font-bold text-white text-sm block">Aporte de Genially y la Gamificación Educativa:</span>
-              <p className="text-white/70 mt-0.5 leading-relaxed">
-                Genially permite construir universos inmersivos no lineales donde los enigmas lógicos y las paradojas se presentan como desafíos interactivos, motivando la perseverancia y el ensayo reflexivo.
-              </p>
-            </div>
+        {/* 4 Exhibit Pedestals (RED 6 to 9) */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-bold text-slate-200 uppercase tracking-wider font-mono text-xs">
+              Colección de Recursos Educativos Digitales (RED 6 al 9)
+            </h2>
+            <span className="text-xs text-slate-500 font-mono">
+              Haz clic en cualquier exhibición para examinar detalles
+            </span>
           </div>
-        </div>
 
-        {/* REDs Grid: RED 6, RED 7, RED 8, RED 9 */}
-        <div className="my-10">
-          <h2 className="text-2xl font-black text-white font-display mb-6 flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-rose-500 animate-pulse" />
-            Recursos Educativos Digitales (RED) de la Sala 2
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {SALA2_DATA.redItems.slice(0, 4).map((red) => (
-              <SpotlightCard
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {SALA2_DATA.redItems.slice(0, 4).map((red, idx) => (
+              <div
                 key={red.id}
-                spotlightColor="rgba(226, 27, 60, 0.3)"
-                borderColor="rgba(226, 27, 60, 0.25)"
-                className="p-6 bg-gradient-to-br from-[#240d16]/90 to-[#12050b]/95 flex flex-col justify-between"
+                onClick={() => {
+                  sound.playClick();
+                  setSelectedExhibit(red);
+                }}
+                className="exhibit-card group"
+                style={{ '--card-accent': 'var(--accent-crimson)' }}
               >
                 <div>
-                  <span className="badge-pill border-rose-500/40 bg-rose-500/10 text-rose-300 text-[10px] mb-3">
-                    {red.formato}
+                  <div className="text-2xl mb-3">{exhibitIcons[idx]}</div>
+                  <span className="text-[11px] font-mono text-rose-400 block mb-1">
+                    RED 0{idx + 6}
                   </span>
-                  <h3 className="text-lg font-bold text-white font-display">
-                    {red.title}
+                  <h3 className="text-sm font-bold text-white font-display group-hover:text-rose-300 transition-colors leading-snug">
+                    {red.title.replace(/^RED #\d+:\s*/, '')}
                   </h3>
-                  <p className="text-xs text-white/80 mt-2 leading-relaxed">
-                    {red.descripcion}
-                  </p>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-white/10 text-[11px] text-rose-300/80 font-mono">
-                  ✦ {red.aportePedagogico}
+                <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
+                  <span className="text-[11px] truncate max-w-[130px]">{red.formato.split('(')[0]}</span>
+                  <span className="text-rose-400 font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                    <Eye size={13} /> Ver
+                  </span>
                 </div>
-              </SpotlightCard>
+              </div>
             ))}
           </div>
         </div>
 
-        {/* =========================================================================
-            RED #10: ACTIVIDAD INTERACTIVA PARA EL VISITANTE
-            "Actividad: Escape Room con 3 acertijos lógicos"
-           ========================================================================= */}
-        <div className="my-12">
-          <SpotlightCard
-            spotlightColor="rgba(226, 27, 60, 0.45)"
-            borderColor="rgba(226, 27, 60, 0.5)"
-            className="p-6 sm:p-8 bg-gradient-to-b from-[#2d0e1c]/95 to-[#15060d]/98"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/10 mb-6 gap-2">
-              <div>
-                <div className="badge-pill border-rose-400/50 bg-rose-400/20 text-rose-200 text-xs font-mono font-bold mb-1">
-                  🎮 RED #10 • ACTIVIDAD INTERACTIVA
-                </div>
-                <h3 className="text-xl sm:text-2xl font-black text-white font-display">
-                  Escape Room Digital: Desbloquea los 3 Candados Lógicos
-                </h3>
-                <p className="text-xs text-white/70 mt-1">
-                  Supera los 3 enigmas deductivos para escapar de la sala de paradojas.
-                </p>
+        {/* Central Hands-On Station: RED #10 Activity */}
+        <div className="gallery-stage mt-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/[0.08] mb-6 gap-3">
+            <div>
+              <div className="meta-pill text-rose-300 border-rose-500/30 text-[11px] mb-1.5">
+                RED #10 • ACTIVIDAD INTERACTIVA DEL VISITANTE
               </div>
-
-              <div className="flex items-center gap-2">
-                {unlockedDoors.map((unlocked, idx) => (
-                  <div
-                    key={idx}
-                    className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs border ${
-                      unlocked
-                        ? 'bg-emerald-500 text-black border-emerald-400 shadow-[0_0_10px_#10B981]'
-                        : idx === currentRiddleIdx
-                        ? 'bg-rose-500/30 text-rose-300 border-rose-400 animate-pulse'
-                        : 'bg-white/5 text-white/40 border-white/10'
-                    }`}
-                  >
-                    {unlocked ? <Unlock size={14} /> : <Lock size={14} />}
-                  </div>
-                ))}
-              </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-white font-display">
+                Terminal de Escape Room: Desbloqueo de Candados Lógicos
+              </h2>
+              <p className="text-xs text-slate-400 mt-1">
+                Aplica la deducción rigurosa para descifrar las claves de los 3 candados de seguridad.
+              </p>
             </div>
 
-            {/* Escape Room Riddle Container */}
-            {!escapeCompleted ? (
-              <div className="space-y-6">
-                <div className="p-5 rounded-2xl bg-black/40 border border-white/10 text-left">
-                  <div className="flex items-center justify-between text-xs text-rose-400 font-mono mb-2">
-                    <span className="font-bold uppercase tracking-wider">{activeRiddle.name}</span>
-                    <span>Acertijo {currentRiddleIdx + 1} de 3</span>
-                  </div>
+            <div className="flex items-center gap-2">
+              {unlockedDoors.map((unlocked, idx) => (
+                <div
+                  key={idx}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-xs border transition-all ${
+                    unlocked
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                      : idx === currentRiddleIdx
+                      ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 animate-pulse'
+                      : 'bg-white/[0.04] text-slate-500 border-white/10'
+                  }`}
+                >
+                  {unlocked ? <Unlock size={14} /> : <Lock size={14} />}
+                </div>
+              ))}
+            </div>
+          </div>
 
-                  <p className="text-sm sm:text-base font-bold text-white leading-relaxed font-display">
-                    {activeRiddle.prompt}
-                  </p>
-
-                  {showClue && (
-                    <div className="mt-3 p-3 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs flex items-center gap-2">
-                      <HelpCircle size={15} className="shrink-0" />
-                      <span>{activeRiddle.clue}</span>
-                    </div>
-                  )}
+          {!escapeCompleted ? (
+            <div className="space-y-5">
+              <div className="p-5 rounded-2xl bg-surface border border-subtle">
+                <div className="flex items-center justify-between text-xs font-mono text-rose-400 mb-2">
+                  <span className="font-bold">{activeRiddle.name}</span>
+                  <span className="text-slate-500">Enigma {currentRiddleIdx + 1} de 3</span>
                 </div>
 
-                <form onSubmit={handleAttemptUnlock} className="flex flex-wrap items-center gap-3">
-                  <input
-                    type="text"
-                    value={userAnswer}
-                    onChange={(e) => setUserAnswer(e.target.value)}
-                    placeholder="Escribe la clave o respuesta..."
-                    className="flex-1 min-w-[200px] px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-white/40 text-xs font-mono focus:border-rose-400 focus:outline-none"
-                  />
+                <p className="text-sm sm:text-base font-semibold text-white leading-relaxed">
+                  {activeRiddle.prompt}
+                </p>
 
-                  <button
-                    type="submit"
-                    className="px-6 py-3 rounded-xl font-bold text-xs text-white bg-rose-600 hover:bg-rose-500 transition-all flex items-center gap-2 shadow-lg shadow-rose-600/30"
-                  >
-                    <Key size={15} />
-                    <span>Desbloquear Candado</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      sound.playClick();
-                      setShowClue(!showClue);
-                    }}
-                    className="px-4 py-3 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/15 text-white/80 transition-colors"
-                  >
-                    {showClue ? 'Ocultar Pista' : '💡 Ver Pista'}
-                  </button>
-                </form>
-
-                {feedback && (
-                  <div
-                    className={`text-xs font-bold p-3 rounded-xl flex items-center gap-2 animate-fadeIn ${
-                      feedback.type === 'success'
-                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                        : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
-                    }`}
-                  >
-                    {feedback.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
-                    <span>{feedback.msg}</span>
+                {showClue && (
+                  <div className="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-300 text-xs flex items-center gap-2">
+                    <HelpCircle size={15} className="shrink-0" />
+                    <span>{activeRiddle.clue}</span>
                   </div>
                 )}
               </div>
-            ) : (
-              <div className="p-8 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-center animate-fadeIn space-y-3">
-                <div className="text-4xl">🎉 🔓</div>
-                <h4 className="text-2xl font-black text-emerald-300 font-display">
-                  ¡ESCAPE ROOM COMPLETADO CON ÉXITO!
-                </h4>
-                <p className="text-xs text-white/80 max-w-md mx-auto leading-relaxed">
-                  Has resuelto los 3 acertijos lógicos demostrando razonamiento inductivo, análisis de veracidad y dominio del método Pólya.
-                </p>
+
+              <form onSubmit={handleUnlock} className="flex flex-wrap items-center gap-2.5">
+                <input
+                  type="text"
+                  value={userAnswer}
+                  onChange={(e) => setUserAnswer(e.target.value)}
+                  placeholder="Introduce la combinación o código..."
+                  className="flex-1 min-w-[200px] px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder-slate-500 text-xs font-mono focus:border-rose-400 focus:outline-none"
+                />
+
+                <button
+                  type="submit"
+                  className="btn-primary text-xs"
+                  style={{ background: 'var(--accent-crimson)', color: '#FFF' }}
+                >
+                  <Key size={14} />
+                  <span>Desbloquear</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setShowClue(!showClue);
+                  }}
+                  className="btn-secondary text-xs"
+                >
+                  {showClue ? 'Ocultar Pista' : '💡 Pista'}
+                </button>
+              </form>
+
+              {feedback && (
+                <div
+                  className={`text-xs font-semibold px-3.5 py-2 rounded-xl flex items-center gap-2 ${
+                    feedback.type === 'success'
+                      ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                      : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
+                  }`}
+                >
+                  {feedback.type === 'success' ? <CheckCircle2 size={15} /> : <AlertCircle size={15} />}
+                  <span>{feedback.msg}</span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-2">
+              <div className="text-3xl">🔓 ✨</div>
+              <h3 className="text-lg font-bold text-emerald-300 font-display">
+                ¡Escape Room Superado!
+              </h3>
+              <p className="text-xs text-slate-300 max-w-md mx-auto">
+                Los 3 candados lógicos han sido resueltos mediante deducción matemática, verificación condicional y el método Pólya.
+              </p>
+              <div className="pt-2">
                 <button
                   onClick={handleResetEscape}
-                  className="mt-2 px-4 py-2 rounded-xl text-xs bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors"
+                  className="btn-secondary text-xs"
                 >
-                  Reiniciar Escape Room
+                  <RefreshCw size={12} /> Reiniciar Desafío
                 </button>
               </div>
-            )}
-          </SpotlightCard>
+            </div>
+          )}
         </div>
 
         {/* Room Navigation Footer */}
-        <div className="mt-14 flex items-center justify-between pt-6 border-t border-white/10">
+        <div className="mt-12 pt-6 border-t border-white/[0.08] flex items-center justify-between text-xs">
           <button
             onClick={() => {
               sound.playClick();
               onNavigate('sala1');
             }}
-            className="flex items-center gap-2 text-xs font-bold text-white/70 hover:text-white"
+            className="btn-secondary"
           >
-            <ArrowLeft size={16} /> Sala 1: Organizadores Gráficos
+            <ArrowLeft size={14} /> Pabellón 01: Organizadores Gráficos
           </button>
 
           <button
-            id="go-sala-3-btn"
             onClick={() => {
               sound.playFanfare();
               onNavigate('sala3');
             }}
-            className="btn-primary text-xs px-6 py-3 rounded-xl flex items-center gap-2 shadow-lg shadow-blue-600/30"
-            style={{
-              background: 'linear-gradient(135deg, #1368CE 0%, #358bf3 100%)'
-            }}
+            className="btn-primary"
+            style={{ background: 'var(--accent-blue)', color: '#FFF' }}
           >
-            <span>Ir a Sala 3: Video Educativo Interactivo</span>
-            <ArrowRight size={16} />
+            <span>Pabellón 03: Video Educativo Interactivo</span>
+            <ArrowRight size={14} />
           </button>
         </div>
       </div>
+
+      {/* Exhibit Inspection Modal */}
+      <ExhibitModal
+        exhibit={selectedExhibit}
+        onClose={() => setSelectedExhibit(null)}
+      />
     </div>
   );
 }

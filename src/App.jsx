@@ -59,8 +59,8 @@ export default function App() {
     BADGES_SYSTEM.find((b) => quizScore >= b.minScore) || BADGES_SYSTEM[BADGES_SYSTEM.length - 1];
 
   return (
-    <ClickSpark sparkCount={10} sparkSize={6} duration={450}>
-      <div className="relative min-h-screen bg-[#090714] text-white flex flex-col font-body selection:bg-purple-600 selection:text-white">
+    <ClickSpark sparkCount={8} sparkSize={5} duration={400}>
+      <div className="relative min-h-screen bg-[#07090E] text-white flex flex-col font-body selection:bg-cyan-500 selection:text-black">
         {/* Top Sticky Header */}
         <MuseumHeader
           currentRoomId={currentRoom}
