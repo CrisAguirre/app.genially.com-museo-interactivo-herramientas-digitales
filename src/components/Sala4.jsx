@@ -213,6 +213,60 @@ export default function Sala4({
                 Wix Digital Portfolio
               </span>
             </div>
+
+            {/* Enlaces externos de acceso */}
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+              <a
+                href="https://view.genially.com/6ac04863aa3049e44a6c2c99"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #00F5A0 0%, #00D9F5 100%)',
+                  color: '#000000',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  fontFamily: 'var(--font-mono)',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 15px rgba(0, 245, 160, 0.3)',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 245, 160, 0.5)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 245, 160, 0.3)'; }}
+              >
+                <span>🎨</span>
+                <span>Ver Genially Interactivo</span>
+              </a>
+              <a
+                href="https://sites.google.com/view/vlogconpausas?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #4285F4 0%, #7B1FA2 100%)',
+                  color: '#FFFFFF',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  fontFamily: 'var(--font-mono)',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 15px rgba(66, 133, 244, 0.3)',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(66, 133, 244, 0.5)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(66, 133, 244, 0.3)'; }}
+              >
+                <span>📹</span>
+                <span>Vlog con Pausas (Google Sites)</span>
+              </a>
+            </div>
           </div>
 
           {/* 2D Vector Animated Neural Brain Diorama */}
